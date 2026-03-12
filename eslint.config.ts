@@ -32,5 +32,6 @@ export default defineConfig([
       "@typescript-eslint": typescriptPlugin,
       import: importPlugin,
     },
+    extends: ["./renderer/.eslintrc-auto-import.json"],
   },
 ]);

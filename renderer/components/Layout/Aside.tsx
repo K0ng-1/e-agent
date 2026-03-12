@@ -1,12 +1,16 @@
-import { Link } from "react-router";
 
 export default function Aside() {
+  const [count, setCount] = useState(0);
+  const handleCount = () => {
+    setCount((prevCount) => prevCount + 1);
+  };
   return (
-    <div>
+    <>
+      <div onClick={handleCount}>{count}</div>
       <div>
-        <Link to="/home">Home</Link>
+        <Link to="/">Home</Link>
       </div>
       <Link to="/store">Store</Link>
-    </div>
+    </>
   );
 }

@@ -1,20 +1,19 @@
 import Layout from "@renderer/components/Layout";
 import HomePage from "@renderer/pages/HomePage";
-import StorePage from "@renderer/pages/StorePage";
 import { createMemoryRouter } from "react-router";
 
 const router = createMemoryRouter([
   {
     path: "/",
-    element: <Layout />,
+    Component: Layout,
     children: [
       {
-        path: "/home",
-        element: <HomePage />,
-      },
+        index: true, Component: HomePage },
       {
         path: "/store",
-        element: <StorePage />,
+        lazy: {
+          Component: async () => (await import("@renderer/pages/StorePage")).default
+        }
       },
     ],
   },
