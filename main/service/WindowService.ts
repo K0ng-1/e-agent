@@ -7,8 +7,10 @@ import {
   ipcMain,
   IpcMainEvent,
   IpcMainInvokeEvent,
+  nativeTheme,
 } from "electron";
 import path from "node:path";
+import logManager from "./LogService";
 
 interface SizeOptions {
   width: number;
@@ -21,7 +23,9 @@ interface SizeOptions {
 
 const SHARED_WINDOW_OPTIONS: BrowserWindowConstructorOptions = {
   titleBarStyle: "hidden", // 隐藏标题栏
-  title: "Electron Agent",
+  title: "Eagent",
+  darkTheme: nativeTheme.shouldUseDarkColors,
+  backgroundColor: nativeTheme.shouldUseDarkColors ? "#2C2C2C" : "#ffffff",
   webPreferences: {
     nodeIntegration: false, // 禁用 Node.js 集成
     contextIsolation: true, // 启用上下文隔离
@@ -35,6 +39,7 @@ class WindowService {
   private static _instance: WindowService;
   private constructor() {
     this._setupIpcEvents();
+    logManager.info("WindowService initialized successfully.");
   }
 
   private _setupIpcEvents() {
@@ -77,7 +82,7 @@ class WindowService {
     this._loadWindowTemplate(window, name);
     return window;
   }
-  private _setupWinLifeCircle(window: BrowserWindow, _name: WindowNames) {
+  private _setupWinLifeCircle(window: BrowserWindow, name: WindowNames) {
     const updateWinStatus = debounce(() => {
       !window?.isDestroyed() &&
         window.webContents?.send(
@@ -89,6 +94,8 @@ class WindowService {
     window.once("closed", () => {
       window?.destroy();
       window.removeListener("resize", updateWinStatus);
+
+      logManager.info(`Window closed: ${name}`);
     });
   }
 

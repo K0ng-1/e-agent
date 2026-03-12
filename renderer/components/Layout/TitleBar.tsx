@@ -1,6 +1,6 @@
-import { useWinManager } from "@renderer/hooks/useWinManager";
+import { useWinManager } from "@renderer/hooks";
 import { Tooltip } from "@heroui/tooltip";
-import styles from "@renderer/style/TitleBar.module.css";
+import styles from "@renderer/styles/titleBar.module.css";
 
 import {
   MinusIcon,

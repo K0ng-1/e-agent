@@ -1,0 +1,33 @@
+@import "tailwindcss";
+@import "./theme/index.css";
+@plugin '../hero.ts';
+@source '../../node_modules/@heroui/theme/dist/**/*.{js,ts,jsx,tsx}';
+@custom-variant dark (&:is(.dark *));
+
+* {
+  user-select: none;
+}
+
+body, #root {
+  overflow: hidden;
+}
+
+body {
+  font-size: 16px;
+  line-height: 1.6;
+  width: 100vw;
+  height: 100vh;
+}
+
+#root {
+  width: 100%;
+  height: 100%;
+  background-color: var(--bg-secondary)
+}
+
+.no-drag {
+  -webkit-app-region: no-drag;
+}
+.drag-region {
+  -webkit-app-region: drag;
+}

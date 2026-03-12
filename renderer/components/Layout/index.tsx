@@ -2,13 +2,19 @@ import { Outlet } from "react-router";
 import Aside from "./Aside";
 import TitleBar from "./TitleBar";
 import DragRegion from "@renderer/components/DragRegion";
+import NavBar from "../NavBar";
 
 export default function Layout() {
   const { t } = useTranslation();
   return (
-    <div className="w-screen h-screen flex">
-      <aside className="w-[200px] h-full flex flex-col shrink-0 bg-gray-800">
-        <Aside />
+    <div className="flex w-full h-full">
+      <aside className="w-[320px] flex shrink-0 bg-main shadow-[-3px_-2px_10px_rgba(101,101,101,0.2)]">
+        <div className="flex flex-auto">
+          <NavBar />
+          <div className="flex-auto">
+            <Aside />
+          </div>
+        </div>
       </aside>
       <main className="flex-auto">
         <TitleBar

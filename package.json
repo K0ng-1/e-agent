@@ -1,6 +1,6 @@
 {
-  "name": "electron-agent",
-  "productName": "electron-agent",
+  "name": "Eagent",
+  "productName": "Eagent",
   "version": "1.0.0",
   "description": "My Electron application description",
   "main": ".vite/build/index.js",
@@ -49,6 +49,7 @@
     "@vitejs/plugin-react": "^5.1.4",
     "ahooks": "^3.9.6",
     "clsx": "^2.1.1",
+    "electron-log": "^5.4.3",
     "electron-squirrel-startup": "^1.0.1",
     "framer-motion": "^12.35.2",
     "i18next": "^25.8.18",
