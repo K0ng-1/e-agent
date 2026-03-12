@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "target": "ESNext",
-    "module": "nodenext",
+    "module": "ESNext",
     "allowJs": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
@@ -9,11 +9,13 @@
     "sourceMap": true,
     "baseUrl": ".",
     "outDir": "dist",
-    "moduleResolution": "nodenext",
-    "resolveJsonModule": true,
-    "jsx": "react-jsx",
+    "moduleResolution": "bundler",
+    "jsx": "preserve",
     "paths": {
-      "@/*": ["src/*"],
+      "@common/*": ["./common/*"],
+      "@main/*": ["./main/*"],
+      "@renderer/*": ["./renderer/*"],
+      "@locales/*": ["./locales/*"],
     },
   }
 }

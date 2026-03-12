@@ -1,5 +1,5 @@
-import React from "react";
-import useCounterStore from "@/store/useCounterStore";
+import useCounterStore from "@renderer/store/useCounterStore";
+import { Button } from "@heroui/button";
 export default function StorePage() {
   const count = useCounterStore((s) => s.count);
   const inc = useCounterStore((s) => s.inc);
@@ -9,9 +9,9 @@ export default function StorePage() {
         StorePage
       </h1>
       <p className="text-2xl font-bold text-center w-full">count: {count}</p>
-      <button onClick={inc} className="text-2xl font-bold text-center w-full">
+      <Button onPress={inc} className="text-2xl font-bold text-center w-full">
         inc
-      </button>
+      </Button>
     </div>
   );
 }
