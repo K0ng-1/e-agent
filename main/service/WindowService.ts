@@ -7,10 +7,10 @@ import {
   ipcMain,
   IpcMainEvent,
   IpcMainInvokeEvent,
-  nativeTheme,
 } from "electron";
 import path from "node:path";
 import logManager from "./LogService";
+import themeManager from "./ThemeService";
 
 interface SizeOptions {
   width: number;
@@ -24,8 +24,8 @@ interface SizeOptions {
 const SHARED_WINDOW_OPTIONS: BrowserWindowConstructorOptions = {
   titleBarStyle: "hidden", // 隐藏标题栏
   title: "Eagent",
-  darkTheme: nativeTheme.shouldUseDarkColors,
-  backgroundColor: nativeTheme.shouldUseDarkColors ? "#2C2C2C" : "#ffffff",
+  darkTheme: themeManager.isDark,
+  backgroundColor: themeManager.isDark ? "#2C2C2C" : "#ffffff",
   webPreferences: {
     nodeIntegration: false, // 禁用 Node.js 集成
     contextIsolation: true, // 启用上下文隔离

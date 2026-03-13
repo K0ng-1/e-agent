@@ -10,16 +10,13 @@ export default function NavBar() {
   const openSettingWindow = () => {};
   const { t } = useTranslation();
 
-  const route = {
-    name: "conversation",
-  };
   return (
     <DragRegion>
       <nav className="h-[calc(100%-1.4rem)] flex flex-col px-4 py-2 mt-[.7rem] mb-[.7rem] border-r border-r-input text-tx-secondary">
         <ul className="flex-auto">
           <li
             className={clsx(
-              { active: route.name === "conversation" },
+              { active: location.pathname === "/conversation" },
               "sidebar-item no-drag cursor-pointer hover:text-primary-hover text-tx-primary",
             )}
           >

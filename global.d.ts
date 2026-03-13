@@ -11,6 +11,10 @@ interface WindowApi {
     warn(message: string, ...meta: any[]): void;
     error(message: string, ...meta: any[]): void;
   };
+
+  setThemeMode(mode: ThemeMode): void;
+  getThemeMode(): Promise<ThemeMode>;
+  onSystemThemeChange(callback: (theme: ThemeMode) => void): void;
 }
 
 declare interface Window {
