@@ -1,5 +1,5 @@
 import { useWinManager } from "@renderer/hooks";
-import { Tooltip } from "@heroui/tooltip";
+import TooltipTheme from "@renderer/components/TooltipTheme";
 import styles from "@renderer/styles/titleBar.module.css";
 
 import {
@@ -40,7 +40,7 @@ export default function TitleBar(props: TitleBarProps) {
         {children ?? title ?? ""}
       </div>
       <div className="title-bar-controls w-[80px] flex items-center justify-end text-tx-secondary">
-        <Tooltip content={t("window.minimize")}>
+        <TooltipTheme content={t("window.minimize")}>
           {isMinimizable && (
             <button
               className={clsx(
@@ -52,8 +52,8 @@ export default function TitleBar(props: TitleBarProps) {
               <MinusIcon className="w-4 h-4" />
             </button>
           )}
-        </Tooltip>
-        <Tooltip content={t("window.maximize")}>
+        </TooltipTheme>
+        <TooltipTheme content={t("window.maximize")}>
           {isMaximizable && (
             <button
               className={clsx(
@@ -67,8 +67,8 @@ export default function TitleBar(props: TitleBarProps) {
               {isMaximized && <ArrowsPointingInIcon className="w-4 h-4" />}
             </button>
           )}
-        </Tooltip>
-        <Tooltip content={t("window.close")}>
+        </TooltipTheme>
+        <TooltipTheme content={t("window.close")}>
           {isClosable && (
             <button
               className={clsx(
@@ -80,7 +80,7 @@ export default function TitleBar(props: TitleBarProps) {
               <XMarkIcon className="w-4 h-4" />
             </button>
           )}
-        </Tooltip>
+        </TooltipTheme>
       </div>
     </header>
   );

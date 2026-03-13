@@ -1,11 +1,11 @@
 import React from "react";
 import DragRegion from "./DragRegion";
-import { Tooltip } from "@heroui/react";
 import {
   ChatBubbleBottomCenterTextIcon,
   Cog8ToothIcon,
 } from "@heroicons/react/24/outline";
 import ThemeSwitcher from "./ThemeSwitcher";
+import TooltipTheme from "./TooltipTheme";
 export default function NavBar() {
   const openSettingWindow = () => {};
   const { t } = useTranslation();
@@ -20,9 +20,9 @@ export default function NavBar() {
               "sidebar-item no-drag cursor-pointer hover:text-primary-hover text-tx-primary",
             )}
           >
-            <Tooltip content={t("main.sidebar.conversations")}>
+            <TooltipTheme content={t("main.sidebar.conversations")} placement="right">
               <ChatBubbleBottomCenterTextIcon className="w-5 h-5" />
-            </Tooltip>
+            </TooltipTheme>
           </li>
         </ul>
         <ul>
@@ -33,9 +33,9 @@ export default function NavBar() {
             className="sidebar-item mt-3 no-drag cursor-pointer hover:text-primary-subtle"
             onClick={openSettingWindow}
           >
-            <Tooltip content={t("main.sidebar.settings")}>
+            <TooltipTheme content={t("main.sidebar.settings")} placement="right">
               <Cog8ToothIcon className="w-5 h-5" />
-            </Tooltip>
+            </TooltipTheme>
           </li>
         </ul>
       </nav>
