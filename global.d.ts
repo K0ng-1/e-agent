@@ -14,7 +14,7 @@ interface WindowApi {
 
   setThemeMode(mode: ThemeMode): void;
   getThemeMode(): Promise<ThemeMode>;
-  onSystemThemeChange(callback: (theme: ThemeMode) => void): void;
+  onSystemThemeChange(callback: (theme: ThemeMode) => void): () => void;
 }
 
 declare interface Window {

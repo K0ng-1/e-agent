@@ -8,11 +8,6 @@ const iconMap = new Map([
 export function useThemeMode() {
   const [themeMode, updateThemeMode] = useState<ThemeMode>(ThemeMode.DARK);
   const themeChangeCallbacks: Array<(mode: ThemeMode) => void> = [];
-  const themeModeRef = useRef(themeMode);
-
-  useEffect(() => {
-    themeModeRef.current = themeMode;
-  }, [themeMode]);
 
   const setThemeMode = (mode: ThemeMode) => {
     updateThemeMode(mode);
@@ -31,18 +26,19 @@ export function useThemeMode() {
   };
 
   useEffect(() => {
+    const cancel = window.api.onSystemThemeChange(async () => {
+      const mode = await window.api.getThemeMode();
+      if (themeMode === ThemeMode.SYSTEM) {
+        updateThemeMode(mode);
+      }
+      themeChangeCallbacks.forEach((cb) => cb(mode));
+    });
     (async () => {
-      window.api.onSystemThemeChange(async () => {
-        const mode = await window.api.getThemeMode();
-        if (themeModeRef.current === ThemeMode.SYSTEM) {
-          updateThemeMode(mode);
-        }
-        themeChangeCallbacks.forEach((cb) => cb(mode));
-      });
       updateThemeMode(await window.api.getThemeMode());
     })();
-  }, []);
 
+    return cancel
+  }, [themeMode]);
   const isDarkMode = useMemo(() => {
     if (themeMode === ThemeMode.SYSTEM) {
       return !!window.matchMedia("(prefers-color-scheme: dark)").matches;

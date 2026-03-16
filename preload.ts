@@ -25,9 +25,13 @@ const api: WindowApi = {
   setThemeMode: (mode: ThemeMode) =>
     ipcRenderer.send(IPC_EVENTS.SET_THEME_MODE, mode),
   getThemeMode: () => ipcRenderer.invoke(IPC_EVENTS.GET_THEME_MODE),
-  onSystemThemeChange: (callback: (theme: ThemeMode) => void) =>
-    ipcRenderer.on(IPC_EVENTS.THEME_MODE_UPDATED, (_, theme) =>
-      callback(theme),
-    ),
+  onSystemThemeChange: (callback: (theme: ThemeMode) => void) => {
+    const handler = (_: Electron.IpcRendererEvent, theme: ThemeMode) =>
+      callback(theme);
+    ipcRenderer.on(IPC_EVENTS.THEME_MODE_UPDATED, handler);
+    return () => {
+      ipcRenderer.off(IPC_EVENTS.THEME_MODE_UPDATED, handler);
+    };
+  },
 };
 contextBridge.exposeInMainWorld("api", api);

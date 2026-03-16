@@ -4,7 +4,9 @@ import TitleBar from "./TitleBar";
 import DragRegion from "@renderer/components/DragRegion";
 import NavBar from "../NavBar";
 import ResizeDivider from "../ResizeDivider";
-
+export const ConversitionContext = createContext<{ width: number }>({
+  width: 0,
+});
 export default function Layout() {
   const { t } = useTranslation();
   const [asideWidth, setAsideWidth] = useState(320);
@@ -14,15 +16,13 @@ export default function Layout() {
   return (
     <div className="flex w-full h-full">
       <aside
-        className="flex shrink-0 bg-main shadow-[-3px_-2px_10px_rgba(101,101,101,0.2)]"
+        className="flex bg-main shadow-[-3px_-2px_10px_rgba(101,101,101,0.2)]"
         style={{ width: asideWidth }}
       >
-        <div className="flex flex-auto">
-          <NavBar />
-          <div className="flex-auto">
-            <Aside />
-          </div>
-        </div>
+        <NavBar />
+        <ConversitionContext.Provider value={{ width: asideWidth }}>
+          <Aside />
+        </ConversitionContext.Provider>
       </aside>
       <ResizeDivider
         direction="vertical"
