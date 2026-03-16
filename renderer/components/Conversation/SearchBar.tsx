@@ -4,10 +4,15 @@ import {
   Bars3BottomRightIcon,
 } from "@heroicons/react/24/outline";
 import useConversationStore from "@renderer/store/useConversationStore";
+import { useContextMenu } from "./useContextMenu";
+
 export default function SearchBar() {
   const { t } = useTranslation();
   const searchKey = useConversationStore((s) => s.searchKey);
   const setSearchKey = useConversationStore((s) => s.setSearchKey);
+
+  const { handle: handleListContextMenu } = useContextMenu();
+
   return (
     <div
       className="flex"
@@ -39,7 +44,10 @@ export default function SearchBar() {
         value={searchKey}
         onValueChange={setSearchKey}
       />
-      <button className="cursor-pointer bg-secondary size-8 flex items-center justify-center">
+      <button
+        className="cursor-pointer bg-secondary size-8 flex items-center justify-center"
+        onClick={handleListContextMenu}
+      >
         <Bars3BottomRightIcon className="w-4 h-4 text-tx-secondary" />
       </button>
     </div>

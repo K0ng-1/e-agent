@@ -1,9 +1,13 @@
 import ConversationWrapper from "../Conversation";
 
-export default function Aside() {
+export const ConversitionContext = createContext<{ width: number }>({
+  width: 0,
+});
+
+export default function Aside({ width }: { width: number }) {
   return (
-    <div className="px-2 py-4 flex-auto" style={{ width: "calc(100% - 57px)" }}>
+    <ConversitionContext.Provider value={{ width }}>
       <ConversationWrapper />
-    </div>
+    </ConversitionContext.Provider>
   );
 }

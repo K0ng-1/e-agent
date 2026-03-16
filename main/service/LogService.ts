@@ -149,6 +149,16 @@ class LogService {
   public error(message: string, ...meta: any[]): void {
     log.error(message, ...meta);
   }
+
+  public logUserOperation(
+    operation: string,
+    userId: string = "unknown",
+    details: any = {},
+  ): void {
+    this.info(
+      `user Operation: ${operation} by ${userId}, Details: ${JSON.stringify(details)}`,
+    );
+  }
 }
 
 export const logManager = LogService.getInstance();

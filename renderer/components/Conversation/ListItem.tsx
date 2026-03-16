@@ -2,9 +2,11 @@ import { Conversation } from "@common/types";
 import { Checkbox } from "@heroui/react";
 import ItemTitle from "./ItemTitle";
 import { StarIcon } from "@heroicons/react/24/solid";
-
-export default function ListItem(props: Conversation) {
-  const { title, selectedModel, pinned } = props;
+interface ListItemProps extends Conversation {
+  onContextMenu?: (e: React.MouseEvent) => void;
+}
+export default function ListItem(props: ListItemProps) {
+  const { title, selectedModel, pinned, onContextMenu } = props;
   const isBatchOperate = false;
   const isTitleEditable = false;
   const [checked, setChecked] = useState(false);
@@ -12,9 +14,13 @@ export default function ListItem(props: Conversation) {
     width: "20px",
     height: "20px",
   };
+
   const updateTitle = (newTitle: string) => {};
   return (
-    <li className="cursor-pointer p-2 mt-2 rounded-md hover:bg-input flex flex-col items-start gap-2">
+    <li
+      className="cursor-pointer p-2 mt-2 rounded-md hover:bg-input flex flex-col items-start gap-2"
+      onContextMenu={onContextMenu}
+    >
       <div className="conversation-desc text-tx-secondary flex items-center text-sm loading-5">
         {selectedModel}
         {pinned && <StarIcon className="w-4 h-4 text-tx-secondary" />}

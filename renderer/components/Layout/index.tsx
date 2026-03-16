@@ -4,9 +4,6 @@ import TitleBar from "./TitleBar";
 import DragRegion from "@renderer/components/DragRegion";
 import NavBar from "../NavBar";
 import ResizeDivider from "../ResizeDivider";
-export const ConversitionContext = createContext<{ width: number }>({
-  width: 0,
-});
 export default function Layout() {
   const { t } = useTranslation();
   const [asideWidth, setAsideWidth] = useState(320);
@@ -20,9 +17,7 @@ export default function Layout() {
         style={{ width: asideWidth }}
       >
         <NavBar />
-        <ConversitionContext.Provider value={{ width: asideWidth }}>
-          <Aside />
-        </ConversitionContext.Provider>
+        <Aside width={asideWidth} />
       </aside>
       <ResizeDivider
         direction="vertical"

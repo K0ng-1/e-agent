@@ -15,6 +15,10 @@ interface WindowApi {
   setThemeMode(mode: ThemeMode): void;
   getThemeMode(): Promise<ThemeMode>;
   onSystemThemeChange(callback: (theme: ThemeMode) => void): () => void;
+
+  showContextMenu(menuId: string, dynamicOptions?: string): Promise<any>;
+  contextMenuItemClick(menuId: string, cb: (id: string) => void): void;
+  removeContextMenuListener(menuId: string): void;
 }
 
 declare interface Window {
