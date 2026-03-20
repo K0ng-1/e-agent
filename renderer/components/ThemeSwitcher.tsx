@@ -1,6 +1,7 @@
 import { ThemeMode } from "@common/constants";
 import { useThemeMode } from "@renderer/hooks";
-import TooltipTheme from "./TooltipTheme";
+import { Tooltip } from "@heroui/react";
+import { useTranslation } from "react-i18next";
 export default function ThemeSwitcher() {
   const { t } = useTranslation();
   const { LIGHT, DARK, SYSTEM } = ThemeMode;
@@ -11,8 +12,8 @@ export default function ThemeSwitcher() {
     setThemeMode(mode);
   };
   return (
-    <TooltipTheme content={t(`settings.theme.${themeMode}`)} placement="right">
+    <Tooltip content={t(`settings.theme.${themeMode}`)} placement="right">
       <ThemeIcon onClick={toggleThemeMode} className="w-5 h-5" />
-    </TooltipTheme>
+    </Tooltip>
   );
 }

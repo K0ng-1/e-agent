@@ -1,6 +1,8 @@
+import { useNavigate, useParams } from "react-router";
 import { MENU_IDS, CONVERSATION_LIST_MENU_IDS } from "@common/constants";
-import useConversationStore from "@renderer/store/useConversationStore";
+import useConversationStore from "@renderer/store/Conversations";
 import { createContextMenu } from "@renderer/utils/contextMenu";
+import useConversation from "@renderer/hooks/useConversation";
 
 const SortByIdMap = new Map([
   ["createAt", CONVERSATION_LIST_MENU_IDS.SORT_BY_CREATE_TIME],
@@ -15,24 +17,23 @@ const SortOrderIdMap = new Map([
 
 export function useContextMenu() {
   const navigate = useNavigate();
-  // const route = useRoute();
+  const params = useParams();
   const sortBy = useConversationStore((state) => state.sortBy);
   const sortOrder = useConversationStore((state) => state.sortOrder);
   const setSortMode = useConversationStore((state) => state.setSortMode);
-  // const [isBatchOperate, setIsBatchOperate] = useState(false);
-
+  const { toggleBatchOperate } = useConversation();
   const actionPolicy = new Map([
     [
       CONVERSATION_LIST_MENU_IDS.BATCH_OPERATIONS,
       () => {
-        // setIsBatchOperate(!isBatchOperate);
+        toggleBatchOperate();
       },
     ],
     [
       CONVERSATION_LIST_MENU_IDS.NEW_CONVERSATION,
       () => {
-        console.log("new conversation");
-        navigate("/conversation");
+        console.dir("new conversation");
+        navigate("/");
       },
     ],
     [
@@ -60,26 +61,19 @@ export function useContextMenu() {
       () => setSortMode(sortBy, "asc"),
     ],
   ]);
-
   const handle = async () => {
-    // const { sortBy, sortOrder } = sortMode;
+    const sortById = SortByIdMap.get(sortBy) ?? "";
+    const sortOrderId = SortOrderIdMap.get(sortOrder) ?? "";
+    const newConversationEnabled = false;
 
-    // const sortById = SortByIdMap.get(sortBy) ?? "";
-    // const sortOrderId = SortOrderIdMap.get(sortOrder) ?? "";
-    // const newConversationEnabled = !!route.params.id;
-
-    const item = await createContextMenu(
-      MENU_IDS.CONVERSATION_LIST,
-      void 0,
-      // [
-      //   {
-      //     id: CONVERSATION_LIST_MENU_IDS.NEW_CONVERSATION,
-      //     enabled: newConversationEnabled,
-      //   },
-      //   { id: sortById, checked: true },
-      //   { id: sortOrderId, checked: true },
-      // ]
-    );
+    const item = await createContextMenu(MENU_IDS.CONVERSATION_LIST, void 0, [
+      {
+        id: CONVERSATION_LIST_MENU_IDS.NEW_CONVERSATION,
+        enabled: newConversationEnabled,
+      },
+      { id: sortById, checked: true },
+      { id: sortOrderId, checked: true },
+    ]);
 
     const action = actionPolicy.get(item as CONVERSATION_LIST_MENU_IDS);
     action?.();
@@ -87,6 +81,5 @@ export function useContextMenu() {
 
   return {
     handle,
-    // isBatchOperate,
   };
 }

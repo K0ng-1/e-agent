@@ -15,7 +15,6 @@ export function createTranslator() {
       for (const _key of keys) {
         result = result[_key];
       }
-      console.log("result +++++++++++++", keys, result);
       return result as string;
     } catch (error) {
       logManager.error(`failed to translate key: ${key} ${error}`);

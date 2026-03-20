@@ -1,19 +1,19 @@
-import { Input } from "@heroui/react";
-import TooltipTheme from "../TooltipTheme";
+import { Input, Tooltip } from "@heroui/react";
 import { debounce } from "@common/utils";
-import { ConversitionContext } from "../Layout/Aside";
+import { ConversitionContext } from "../Layout";
+import { useContext, useEffect, useRef, useState } from "react";
 
-export default function ItemTitle({
-  title,
-  onUpdateTitle,
-}: {
+interface ItemTitleProps {
   title: string;
+  isEditable: boolean;
   onUpdateTitle: (newTitle: string) => void;
-}) {
-  const [_title, setTitle] = useState(title);
+}
+export default function ItemTitle(props: ItemTitleProps) {
+  const { title, onUpdateTitle, isEditable = false } = props;
   const [isTitleOverflow, setIsTitleOverflow] = useState(false);
   const titleRef = useRef<HTMLHeadingElement>(null);
-  const isEditable = false;
+
+  const [_title, setTitle] = useState(title);
 
   const { width } = useContext(ConversitionContext);
 
@@ -34,7 +34,7 @@ export default function ItemTitle({
     };
   }, []);
 
-  useEffect(updateOverflowStatus, [_title, width]);
+  useEffect(updateOverflowStatus, [title, width]);
 
   return (
     <>
@@ -44,17 +44,17 @@ export default function ItemTitle({
           size="sm"
           value={_title}
           onValueChange={setTitle}
-          onKeyDown={(e) => e.key === "Enter" && setTitle(_title)}
+          onKeyDown={(e) => e.key === "Enter" && onUpdateTitle(_title)}
         />
       ) : (
         <h2
           ref={titleRef}
-          className="text-xs conversation-title w-full text-tx-secondary font-semibold loading-5 truncate"
+          className="text-xs conversation-title text-tx-secondary font-semibold truncate"
         >
           {isTitleOverflow ? (
-            <TooltipTheme content={title}>
+            <Tooltip content={title}>
               <span>{title}</span>
-            </TooltipTheme>
+            </Tooltip>
           ) : (
             title
           )}

@@ -1,12 +1,15 @@
 import { ThemeMode } from "@common/constants";
 import { SunIcon, MoonIcon, TvIcon } from "@heroicons/react/24/solid";
+import useThemeStore from "@renderer/store/theme";
+import { useEffect, useMemo } from "react";
 const iconMap = new Map([
   [ThemeMode.SYSTEM, TvIcon],
   [ThemeMode.LIGHT, SunIcon],
   [ThemeMode.DARK, MoonIcon],
 ]);
 export function useThemeMode() {
-  const [themeMode, updateThemeMode] = useState<ThemeMode>(ThemeMode.DARK);
+  const themeMode = useThemeStore((s) => s.themeMode);
+  const updateThemeMode = useThemeStore((s) => s.setThemeMode);
   const themeChangeCallbacks: Array<(mode: ThemeMode) => void> = [];
 
   const setThemeMode = (mode: ThemeMode) => {
@@ -37,7 +40,7 @@ export function useThemeMode() {
       updateThemeMode(await window.api.getThemeMode());
     })();
 
-    return cancel
+    return cancel;
   }, [themeMode]);
   const isDarkMode = useMemo(() => {
     if (themeMode === ThemeMode.SYSTEM) {

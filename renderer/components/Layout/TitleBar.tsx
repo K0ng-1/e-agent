@@ -1,6 +1,5 @@
 import { useWinManager } from "@renderer/hooks";
-import TooltipTheme from "@renderer/components/TooltipTheme";
-import styles from "@renderer/styles/titleBar.module.css";
+import { Button, Tooltip } from "@heroui/react";
 
 import {
   MinusIcon,
@@ -8,6 +7,7 @@ import {
   ArrowsPointingInIcon,
   ArrowsPointingOutIcon,
 } from "@heroicons/react/24/outline";
+import { useTranslation } from "react-i18next";
 interface TitleBarProps {
   title?: string;
   isMaximizable?: boolean;
@@ -40,47 +40,45 @@ export default function TitleBar(props: TitleBarProps) {
         {children ?? title ?? ""}
       </div>
       <div className="title-bar-controls w-[80px] flex items-center justify-end text-tx-secondary">
-        <TooltipTheme content={t("window.minimize")}>
+        <Tooltip content={t("window.minimize")}>
           {isMinimizable && (
-            <button
-              className={clsx(
-                styles.titleBarButton,
-                "cursor-pointer hover:bg-input",
-              )}
-              onClick={minimizeWindow}
+            <Button
+              size="sm"
+              variant="light"
+              isIconOnly
+              onPress={minimizeWindow}
             >
               <MinusIcon className="w-4 h-4" />
-            </button>
+            </Button>
           )}
-        </TooltipTheme>
-        <TooltipTheme content={t("window.maximize")}>
+        </Tooltip>
+        <Tooltip content={t("window.maximize")}>
           {isMaximizable && (
-            <button
-              className={clsx(
-                styles.titleBarButton,
-                "cursor-pointer hover:bg-input",
-              )}
-              onClick={maximizeWindow}
+            <Button
+              size="sm"
+              variant="light"
+              isIconOnly
+              onPress={maximizeWindow}
             >
               {isMaximized}
               {!isMaximized && <ArrowsPointingOutIcon className="w-4 h-4" />}
               {isMaximized && <ArrowsPointingInIcon className="w-4 h-4" />}
-            </button>
+            </Button>
           )}
-        </TooltipTheme>
-        <TooltipTheme content={t("window.close")}>
+        </Tooltip>
+        <Tooltip content={t("window.close")}>
           {isClosable && (
-            <button
-              className={clsx(
-                styles.titleBarButton,
-                "close-button cursor-pointer hover:bg-red-300",
-              )}
-              onClick={handleClose}
+            <Button
+              size="sm"
+              variant="light"
+              isIconOnly
+              className="hover:!bg-danger-100"
+              onPress={handleClose}
             >
               <XMarkIcon className="w-4 h-4" />
-            </button>
+            </Button>
           )}
-        </TooltipTheme>
+        </Tooltip>
       </div>
     </header>
   );

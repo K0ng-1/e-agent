@@ -1,3 +1,5 @@
+import { useEffect, useState } from "react";
+
 export function useWinManager() {
   const [isMaximized, setIsMaximized] = useState(false);
 

@@ -8,24 +8,17 @@ const router = createMemoryRouter([
     Component: Layout,
     children: [
       {
-        index: true,
         id: "home",
-        Component: HomePage,
+        path: "/",
+        element: <HomePage />,
       },
       {
-        id: "store",
-        path: "/store",
-        lazy: {
-          Component: async () =>
-            (await import("@renderer/pages/StorePage")).default,
-        },
-      },
-      {
+        index: true,
         id: "conversation",
-        path: "/conversation",
+        path: "/conversation/:id?",
         lazy: {
           Component: async () =>
-            (await import("@renderer/pages/StorePage")).default,
+            (await import("@renderer/pages/Conversation/index")).default,
         },
       },
     ],

@@ -1,5 +1,5 @@
-import { MouseEventHandler } from "react";
-
+import { MouseEventHandler, useRef } from "react";
+import clsx from "clsx";
 interface ResizeDividerProps {
   direction: "vertical" | "horizontal";
   valIsNegative?: boolean; // 是否反向拖动
@@ -63,7 +63,7 @@ export default function ResizeDivider(props: ResizeDividerProps) {
         isVertical
           ? "w-5 h-full cursor-col-resize"
           : "w-full h-5 cursor-row-resize",
-        "resize-divider bg-transparent z-999",
+        "resize-divider bg-transparent z-999 shrink-0",
       )}
       onClick={(e) => {
         e.stopPropagation();

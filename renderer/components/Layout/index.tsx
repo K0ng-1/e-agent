@@ -1,15 +1,23 @@
 import { Outlet } from "react-router";
-import Aside from "./Aside";
 import TitleBar from "./TitleBar";
 import DragRegion from "@renderer/components/DragRegion";
 import NavBar from "../NavBar";
 import ResizeDivider from "../ResizeDivider";
+import ConversationWrapper from "../Conversation";
+import { createContext, useCallback, useState } from "react";
+import { useTranslation } from "react-i18next";
+export const ConversitionContext = createContext<{ width: number }>({
+  width: 0,
+});
 export default function Layout() {
   const { t } = useTranslation();
   const [asideWidth, setAsideWidth] = useState(320);
-  const handleOnResize = (size: number) => {
-    setAsideWidth(size);
-  };
+  const handleOnResize = useCallback(
+    (size: number) => {
+      setAsideWidth(size);
+    },
+    [setAsideWidth],
+  );
   return (
     <div className="flex w-full h-full">
       <aside
@@ -17,13 +25,15 @@ export default function Layout() {
         style={{ width: asideWidth }}
       >
         <NavBar />
-        <Aside width={asideWidth} />
+        <ConversitionContext.Provider value={{ width: asideWidth }}>
+          <ConversationWrapper />
+        </ConversitionContext.Provider>
       </aside>
       <ResizeDivider
         direction="vertical"
         size={asideWidth}
         maxSize={800}
-        minSize={200}
+        minSize={220}
         onResize={handleOnResize}
       />
       <main className="flex-auto">

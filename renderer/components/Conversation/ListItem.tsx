@@ -2,20 +2,46 @@ import { Conversation } from "@common/types";
 import { Checkbox } from "@heroui/react";
 import ItemTitle from "./ItemTitle";
 import { StarIcon } from "@heroicons/react/24/solid";
+import useConversation from "@renderer/hooks/useConversation";
+import { memo } from "react";
 interface ListItemProps extends Conversation {
+  isTitleEditable: boolean;
   onContextMenu?: (e: React.MouseEvent) => void;
 }
-export default function ListItem(props: ListItemProps) {
-  const { title, selectedModel, pinned, onContextMenu } = props;
-  const isBatchOperate = false;
-  const isTitleEditable = false;
-  const [checked, setChecked] = useState(false);
-  const _CHECKBOX_STYLE_FIX = {
-    width: "20px",
-    height: "20px",
+export default memo(function ListItem(props: ListItemProps) {
+  const { id, title, selectedModel, pinned, isTitleEditable, onContextMenu } =
+    props;
+  const {
+    selectIds,
+    setEditId,
+    setSelectIds,
+    updateConversation,
+    isBatchOperate,
+  } = useConversation();
+  console.dir("memo isBatchOperate, " + isBatchOperate);
+
+  const handleCheckedChange = (checked: boolean) => {
+    setSelectIds(
+      checked ? [...selectIds, id] : selectIds.filter((item) => item !== id),
+    );
   };
 
-  const updateTitle = (newTitle: string) => {};
+  const updateTitle = async (newTitle: string) => {
+    await updateConversation(
+      {
+        id,
+        title: newTitle,
+        selectedModel: props.selectedModel,
+        createdAt: props.createdAt,
+        updatedAt: props.updatedAt,
+        providerId: props.providerId,
+        pinned: props.pinned,
+      },
+      true,
+    );
+
+    setEditId(null);
+  };
   return (
     <li
       className="cursor-pointer p-2 mt-2 rounded-md hover:bg-input flex flex-col items-start gap-2"
@@ -25,28 +51,23 @@ export default function ListItem(props: ListItemProps) {
         {selectedModel}
         {pinned && <StarIcon className="w-4 h-4 text-tx-secondary" />}
       </div>
-      {isBatchOperate ? (
-        <div className="w-full flex items-center">
+      <div className="w-full flex items-center truncate">
+        {isBatchOperate && (
           <Checkbox
-            style={_CHECKBOX_STYLE_FIX}
-            checked={checked}
-            onValueChange={setChecked}
+            size="sm"
+            isSelected={selectIds.includes(id)}
+            onValueChange={handleCheckedChange}
+            onClick={(e) => {
+              e.stopPropagation();
+            }}
           />
-          <div className="flex-auto">
-            <ItemTitle
-              title={title}
-              is-editable={isTitleEditable}
-              onUpdateTitle={updateTitle}
-            />
-          </div>
-        </div>
-      ) : (
+        )}
         <ItemTitle
           title={title}
-          is-editable={isTitleEditable}
+          isEditable={isTitleEditable}
           onUpdateTitle={updateTitle}
         />
-      )}
+      </div>
     </li>
   );
-}
+});

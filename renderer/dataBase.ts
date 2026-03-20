@@ -15,6 +15,7 @@ export const providers: Provider[] = [
     }),
     createdAt: new Date().getTime(),
     updatedAt: new Date().getTime(),
+    visible: true,
   },
   {
     id: 2,
@@ -27,6 +28,7 @@ export const providers: Provider[] = [
     }),
     createdAt: new Date().getTime(),
     updatedAt: new Date().getTime(),
+    visible: true,
   },
   {
     id: 3,
@@ -39,6 +41,7 @@ export const providers: Provider[] = [
     }),
     createdAt: new Date().getTime(),
     updatedAt: new Date().getTime(),
+    visible: true,
   },
   {
     id: 4,
@@ -51,6 +54,7 @@ export const providers: Provider[] = [
     }),
     createdAt: new Date().getTime(),
     updatedAt: new Date().getTime(),
+    visible: true,
   },
 ];
 export const dataBase = new Dexie("eAgentDB") as Dexie & {
