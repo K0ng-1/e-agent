@@ -3,13 +3,18 @@ import { debounce } from "@common/utils";
 import useConversationStore from "@renderer/store/Conversations";
 import { useMemo, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import useDialog from "./useDialog";
+import { DialogFeedback } from "@common/constants";
+import { useNavigate } from "react-router";
 
 interface Props {
   provider: string;
   message: string;
 }
-export default function useConversation() {
+export function useConversation() {
+  const navigate = useNavigate();
   const { t } = useTranslation();
+  const { createDialog } = useDialog();
   const conversations = useConversationStore((s) => s.conversations);
   const searchKey = useConversationStore((s) => s.searchKey);
   const sortBy = useConversationStore((s) => s.sortBy);
@@ -147,12 +152,21 @@ export default function useConversation() {
     setSelectIds(checked ? ids : []);
   };
 
-  const delSelectedConversations = () => {
+  const delSelectedConversations = async () => {
     if (!selectIds.length) {
       return;
     }
-    selectIds.forEach((id) => delConversation(id));
-    setSelectIds([]);
+    const res = await createDialog({
+      title: "main.conversation.dialog.title",
+      content: "main.conversation.dialog.content_1",
+    });
+    if (res === DialogFeedback.CONFIRM) {
+      selectIds.forEach((id) => delConversation(id));
+      setSelectIds([]);
+      if (!conversations.length) {
+        navigate("/conversation");
+      }
+    }
   };
 
   const pinSelectedConversations = () => {
@@ -183,3 +197,5 @@ export default function useConversation() {
     toggleBatchOperate,
   };
 }
+
+export default useConversation;

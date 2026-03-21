@@ -1,4 +1,9 @@
-import { IPC_EVENTS, ThemeMode } from "@common/constants";
+import {
+  DialogFeedback,
+  IPC_EVENTS,
+  ThemeMode,
+  WINDOW_NAMES,
+} from "@common/constants";
 import { contextBridge, ipcRenderer } from "electron";
 
 const api: WindowApi = {
@@ -10,17 +15,6 @@ const api: WindowApi = {
       callback(isMaximized),
     ),
   isWindowMaximized: () => ipcRenderer.invoke(IPC_EVENTS.IS_WINDOW_MAXIMIZED),
-
-  logger: {
-    debug: (message: string, ...meta: any[]) =>
-      ipcRenderer.send(IPC_EVENTS.LOG_DEBUG, message, ...meta),
-    info: (message: string, ...meta: any[]) =>
-      ipcRenderer.send(IPC_EVENTS.LOG_INFO, message, ...meta),
-    warn: (message: string, ...meta: any[]) =>
-      ipcRenderer.send(IPC_EVENTS.LOG_WARN, message, ...meta),
-    error: (message: string, ...meta: any[]) =>
-      ipcRenderer.send(IPC_EVENTS.LOG_ERROR, message, ...meta),
-  },
 
   setThemeMode: (mode: ThemeMode) =>
     ipcRenderer.send(IPC_EVENTS.SET_THEME_MODE, mode),
@@ -41,5 +35,43 @@ const api: WindowApi = {
     ),
   removeContextMenuListener: (menuId: string) =>
     ipcRenderer.removeAllListeners(`${IPC_EVENTS.SHOW_CONTEXT_MENU}:${menuId}`),
+
+  viewIsReady: () => ipcRenderer.send(IPC_EVENTS.RENDERER_IS_READY),
+
+  createDialog: (params: CreateDialogProps) => {
+    return new Promise(async (resolve) => {
+      const feedback = (await ipcRenderer.invoke(
+        `${IPC_EVENTS.OPEN_WINDOW}:${WINDOW_NAMES.DIALOG}`,
+        {
+          title: params.title ?? "",
+          content: params.content ?? "",
+          confirmText: params.confirmText ?? "",
+          cancelText: params.cancelText ?? "",
+        },
+      )) as DialogFeedback;
+      if (feedback === DialogFeedback.CONFIRM) {
+        params.onConfirm?.();
+      }
+      if (feedback === DialogFeedback.CANCEL) {
+        params.onCancel?.();
+      }
+      resolve(feedback);
+    });
+  },
+  _dialogFeedback: (val: DialogFeedback, winId: number) =>
+    ipcRenderer.send(`${WINDOW_NAMES.DIALOG}${val}`, winId),
+  _dialogGetParams: () =>
+    ipcRenderer.invoke(`${WINDOW_NAMES.DIALOG}get-params`),
+
+  logger: {
+    debug: (message: string, ...meta: any[]) =>
+      ipcRenderer.send(IPC_EVENTS.LOG_DEBUG, message, ...meta),
+    info: (message: string, ...meta: any[]) =>
+      ipcRenderer.send(IPC_EVENTS.LOG_INFO, message, ...meta),
+    warn: (message: string, ...meta: any[]) =>
+      ipcRenderer.send(IPC_EVENTS.LOG_WARN, message, ...meta),
+    error: (message: string, ...meta: any[]) =>
+      ipcRenderer.send(IPC_EVENTS.LOG_ERROR, message, ...meta),
+  },
 };
 contextBridge.exposeInMainWorld("api", api);

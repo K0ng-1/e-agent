@@ -4,7 +4,7 @@ import ProviderSelect from "@renderer/components/ProviderSelect";
 import { Button, Textarea, Tooltip } from "@heroui/react";
 import { ArrowUpCircleIcon, PauseIcon } from "@heroicons/react/24/solid";
 import { MessageInputStatus } from "@renderer/types/enum";
-import useConversation from "@renderer/hooks/useConversation";
+import { useConversation } from "@renderer/hooks";
 export default function MessageInput() {
   const { t } = useTranslation();
   const { createConversation } = useConversation();
@@ -37,8 +37,8 @@ export default function MessageInput() {
   const isLoading = status === MessageInputStatus.LOADING;
 
   const BtnIconMap = {
-    normal: <ArrowUpCircleIcon className="size-4" />,
-    streaming: <PauseIcon className="size-4" />,
+    normal: <ArrowUpCircleIcon className="size-5" />,
+    streaming: <PauseIcon className="size-5" />,
     loading: null,
   };
 
@@ -76,6 +76,7 @@ export default function MessageInput() {
               isLoading={isLoading}
               radius="full"
               color="primary"
+              size="sm"
               disabled={isBtnDisabled}
               onPress={handelSend}
               isIconOnly

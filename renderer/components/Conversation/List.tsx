@@ -1,19 +1,43 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useMemo } from "react";
 import ListItem from "./ListItem";
 import { createContextMenu } from "@renderer/utils/contextMenu";
-import { CONVERSATION_ITEM_MENU_IDS, MENU_IDS } from "@common/constants";
+import {
+  CONVERSATION_ITEM_MENU_IDS,
+  DialogFeedback,
+  MENU_IDS,
+} from "@common/constants";
 import { Conversation } from "@common/types";
-import useConversation from "@renderer/hooks/useConversation";
+import { useConversation, useDialog } from "@renderer/hooks";
+import { useNavigate, useSearchParams } from "react-router";
 
 export default function List() {
-  const { filteredConversations, editId, delConversation, pinConversation, setEditId } =
-    useConversation();
+  const {
+    filteredConversations,
+    editId,
+    delConversation,
+    pinConversation,
+    setEditId,
+  } = useConversation();
+  const { createDialog } = useDialog();
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const currentId = useMemo(
+    () => Number(searchParams.get("id")),
+    [searchParams],
+  );
 
   const conversationItemActionPolicy = new Map([
     [
       CONVERSATION_ITEM_MENU_IDS.DEL,
       async (item: Conversation) => {
-        await delConversation(item.id);
+        const res = await createDialog({
+          title: "main.conversation.dialog.title",
+          content: "main.conversation.dialog.content",
+        });
+        if (res === DialogFeedback.CONFIRM) {
+          await delConversation(item.id);
+          item.id === currentId && navigate("/conversation");
+        }
       },
     ],
     [
@@ -34,9 +58,18 @@ export default function List() {
     async (e: React.MouseEvent, item: Conversation) => {
       e.preventDefault();
       e.stopPropagation();
+      const opts = item.pinned
+        ? [
+            {
+              label: "menu.conversation.unpinConversation",
+              id: CONVERSATION_ITEM_MENU_IDS.PIN,
+            },
+          ]
+        : void 0;
       const clickItem = (await createContextMenu(
         MENU_IDS.CONVERSATION_ITEM,
         void 0,
+        opts,
       )) as CONVERSATION_ITEM_MENU_IDS;
       const action = conversationItemActionPolicy.get(clickItem);
       action && (await action(item));

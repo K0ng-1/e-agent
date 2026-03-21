@@ -14,6 +14,7 @@ export function useWinManager() {
   }
 
   useEffect(() => {
+    window.api.viewIsReady();
     (async () => {
       setIsMaximized(await window.api.isWindowMaximized());
       window.api.onWindowMaximized((_isMaximized: boolean) => {
@@ -29,3 +30,5 @@ export function useWinManager() {
     isMaximized,
   };
 }
+
+export default useWinManager;

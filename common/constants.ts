@@ -1,5 +1,6 @@
 export enum IPC_EVENTS {
   // renderer to main
+  OPEN_WINDOW = "open-window",
   CLOSE_WINDOW = "close-window",
   MINIMIZE_WINDOW = "minimize-window",
   MAXIMIZE_WINDOW = "maximize-window",
@@ -7,7 +8,12 @@ export enum IPC_EVENTS {
   SET_THEME_MODE = "set-theme-mode",
   GET_THEME_MODE = "get-theme-mode",
   IS_DARK_MODE = "is-dark-mode",
+  SET_CONFIG = "set-config",
+  GET_CONFIG = "get-config",
+  UPDATE_CONFIG = "update-config",
+  RENDERER_IS_READY = "renderer-ready",
   SHOW_CONTEXT_MENU = "show-context-menu",
+  START_A_DIALOGUE = "start-a-dialogue",
 
   LOG_DEBUG = "log-debug",
   LOG_INFO = "log-info",
@@ -17,11 +23,13 @@ export enum IPC_EVENTS {
 
   // main to renderer
   THEME_MODE_UPDATED = "theme-mode-updated",
+  CONFIG_UPDATED = "config-updated",
+  SHORTCUT_CALLED = "shortcut-called",
 }
 
 export enum SHORTCUT_KEYS {
-  CLOSE_WINDOW = 'CmdOrCtrl+W',
-  SEND_MESSAGE = 'CmdOrCtrl+Enter',
+  CLOSE_WINDOW = "CmdOrCtrl+W",
+  SEND_MESSAGE = "CmdOrCtrl+Enter",
 }
 
 export enum WINDOW_NAMES {
@@ -31,18 +39,18 @@ export enum WINDOW_NAMES {
 }
 
 export enum CONFIG_KEYS {
-  THEME_MODE = 'themeMode',
-  PRIMARY_COLOR = 'primaryColor',
-  LANGUAGE = 'language',
-  FONT_SIZE = 'fontSize',
-  MINIMIZE_TO_TRAY = 'minimizeToTray',
-  PROVIDER = 'provider',
-  DEFAULT_MODEL = 'defaultModel',
+  THEME_MODE = "themeMode",
+  PRIMARY_COLOR = "primaryColor",
+  LANGUAGE = "language",
+  FONT_SIZE = "fontSize",
+  MINIMIZE_TO_TRAY = "minimizeToTray",
+  PROVIDER = "provider",
+  DEFAULT_MODEL = "defaultModel",
 }
 
 export const MAIN_WIN_SIZE = {
-  width: 800,
-  height: 500,
+  width: 1000,
+  height: 600,
   minWidth: 800,
   minHeight: 500,
 } as const;
@@ -81,4 +89,8 @@ export enum MESSAGE_ITEM_MENU_IDS {
   COPY = "copy",
   DELETE = "delete",
   SELECT = "select",
+}
+export enum DialogFeedback {
+  CONFIRM = "confirm",
+  CANCEL = "cancel",
 }

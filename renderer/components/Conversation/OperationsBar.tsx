@@ -1,5 +1,5 @@
 import { Button, ButtonGroup, Checkbox } from "@heroui/react";
-import useConversation from "@renderer/hooks/useConversation";
+import { useConversation } from "@renderer/hooks";
 import { useTranslation } from "react-i18next";
 export default function OperationsBar() {
   const { isBatchOperate, toggleBatchOperate } = useConversation();

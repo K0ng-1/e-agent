@@ -72,7 +72,7 @@ export default function TitleBar(props: TitleBarProps) {
               size="sm"
               variant="light"
               isIconOnly
-              className="hover:!bg-danger-100"
+              className="hover:bg-danger-100!"
               onPress={handleClose}
             >
               <XMarkIcon className="w-4 h-4" />
