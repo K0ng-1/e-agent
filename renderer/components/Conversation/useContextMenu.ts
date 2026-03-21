@@ -1,4 +1,4 @@
-import { useNavigate, useParams } from "react-router";
+import { useLocation, useNavigate, useParams, useRoutes } from "react-router";
 import { MENU_IDS, CONVERSATION_LIST_MENU_IDS } from "@common/constants";
 import useConversationStore from "@renderer/store/Conversations";
 import { createContextMenu } from "@renderer/utils/contextMenu";
@@ -17,7 +17,7 @@ const SortOrderIdMap = new Map([
 
 export function useContextMenu() {
   const navigate = useNavigate();
-  const params = useParams();
+  const location = useLocation();
   const sortBy = useConversationStore((state) => state.sortBy);
   const sortOrder = useConversationStore((state) => state.sortOrder);
   const setSortMode = useConversationStore((state) => state.setSortMode);
@@ -32,7 +32,6 @@ export function useContextMenu() {
     [
       CONVERSATION_LIST_MENU_IDS.NEW_CONVERSATION,
       () => {
-        console.dir("new conversation");
         navigate("/");
       },
     ],
@@ -64,12 +63,12 @@ export function useContextMenu() {
   const handle = async () => {
     const sortById = SortByIdMap.get(sortBy) ?? "";
     const sortOrderId = SortOrderIdMap.get(sortOrder) ?? "";
-    const newConversationEnabled = false;
+    const enabled = location.pathname !== "/";
 
     const item = await createContextMenu(MENU_IDS.CONVERSATION_LIST, void 0, [
       {
         id: CONVERSATION_LIST_MENU_IDS.NEW_CONVERSATION,
-        enabled: newConversationEnabled,
+        enabled,
       },
       { id: sortById, checked: true },
       { id: sortOrderId, checked: true },

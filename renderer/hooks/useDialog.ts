@@ -10,7 +10,7 @@ export function useDialog() {
     cancelText: "",
   });
 
-  const { themeMode } = useThemeMode();
+  // const { themeMode } = useThemeMode();
 
   useEffect(() => {
     window.api._dialogGetParams().then((res) => setParams(res));

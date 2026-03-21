@@ -26,6 +26,9 @@ export function useConversation() {
   const saveSortMode = useConversationStore((s) => s.saveSortMode);
   const addConversation = useConversationStore((s) => s.addConversation);
   const updateConversation = useConversationStore((s) => s.updateConversation);
+  const getConversationById = useConversationStore(
+    (s) => s.getConversationById,
+  );
   const delConversation = useConversationStore((s) => s.delConversation);
   const pinConversation = useConversationStore((s) => s.pinConversation);
   const setEditId = useConversationStore((s) => s.setEditId);
@@ -164,7 +167,7 @@ export function useConversation() {
       selectIds.forEach((id) => delConversation(id));
       setSelectIds([]);
       if (!conversations.length) {
-        navigate("/conversation");
+        navigate("/");
       }
     }
   };
@@ -186,6 +189,7 @@ export function useConversation() {
     isBatchOperate,
     setSearchKey,
     createConversation,
+    getConversationById,
     updateConversation,
     delConversation,
     delSelectedConversations,

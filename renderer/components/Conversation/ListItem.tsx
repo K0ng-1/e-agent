@@ -4,11 +4,13 @@ import ItemTitle from "./ItemTitle";
 import { StarIcon } from "@heroicons/react/24/solid";
 import useConversation from "@renderer/hooks/useConversation";
 import { memo } from "react";
+import { useNavigate } from "react-router";
 interface ListItemProps extends Conversation {
   isTitleEditable: boolean;
   onContextMenu?: (e: React.MouseEvent) => void;
 }
 export default memo(function ListItem(props: ListItemProps) {
+  const navigate = useNavigate();
   const { id, title, selectedModel, pinned, isTitleEditable, onContextMenu } =
     props;
   const {
@@ -46,6 +48,10 @@ export default memo(function ListItem(props: ListItemProps) {
     <li
       className="cursor-pointer p-2 mt-2 rounded-md hover:bg-input flex flex-col items-start gap-2"
       onContextMenu={onContextMenu}
+      onClick={(e) => {
+        e.stopPropagation();
+        navigate(`/conversation/${id}`);
+      }}
     >
       <div className="conversation-desc text-tx-secondary flex items-center text-sm loading-5">
         {selectedModel}

@@ -29,9 +29,10 @@ export function useThemeMode() {
   };
 
   useEffect(() => {
+    console.dir("????????");
     const cancel = window.api.onSystemThemeChange(async () => {
       const mode = await window.api.getThemeMode();
-      updateThemeMode(mode);
+      // updateThemeMode(mode);
       themeChangeCallbacks.forEach((cb) => cb(mode));
     });
     (async () => {

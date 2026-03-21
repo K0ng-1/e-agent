@@ -36,7 +36,7 @@ export default function List() {
         });
         if (res === DialogFeedback.CONFIRM) {
           await delConversation(item.id);
-          item.id === currentId && navigate("/conversation");
+          item.id === currentId && navigate("/");
         }
       },
     ],

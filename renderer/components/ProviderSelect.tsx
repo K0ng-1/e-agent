@@ -41,7 +41,7 @@ export default function ProviderSelect(props: ProviderSelectProps) {
 
   return (
     <>
-      <span className="text-tx-primary text-[0.7rem]">
+      {/* <span className="text-tx-primary text-[0.7rem]">
         {t("main.conversation.goSettings")}
         <Button
           className="go-setting-btn px-1 font-bold"
@@ -51,14 +51,13 @@ export default function ProviderSelect(props: ProviderSelectProps) {
           {t("main.conversation.settings")}
         </Button>
         {t("main.conversation.addModel")}
-      </span>
+      </span> */}
       <Select
-        placeholder="Select an animal"
+        placeholder={t("main.conversation.selectModel")}
         size="sm"
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        disallowEmptySelection={true}
-        aria-label="Select a provider"
+        aria-label={t("main.conversation.selectModel")}
       >
         {SelectChildren}
       </Select>

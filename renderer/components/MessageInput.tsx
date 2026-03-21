@@ -1,18 +1,37 @@
-import { useTranslation } from "react-i18next";
 import { useMemo, useState } from "react";
-import ProviderSelect from "@renderer/components/ProviderSelect";
+import { useTranslation } from "react-i18next";
+import clsx from "clsx";
 import { Button, Textarea, Tooltip } from "@heroui/react";
-import { ArrowUpCircleIcon, PauseIcon } from "@heroicons/react/24/solid";
+import ProviderSelect from "@renderer/components/ProviderSelect";
+import { ArrowUpIcon, PauseIcon } from "@heroicons/react/24/outline";
 import { MessageInputStatus } from "@renderer/types/enum";
-import { useConversation } from "@renderer/hooks";
-export default function MessageInput() {
+
+interface Props {
+  message: string;
+  setMessage: (message: string) => void;
+  provider: string;
+  setProvider: (provider: string) => void;
+  placeholder?: string;
+  className?: string;
+  onSend?: () => void;
+  rows?: number;
+}
+
+export default function MessageInput(props: Props) {
+  const {
+    message,
+    setMessage,
+    provider,
+    setProvider,
+    placeholder,
+    className,
+    onSend,
+    rows = 3,
+  } = props;
   const { t } = useTranslation();
-  const { createConversation } = useConversation();
   const [status, setStatus] = useState<MessageInputStatus>(
     MessageInputStatus.NORMAL,
   );
-  const [provider, setProvider] = useState("");
-  const [message, setMessage] = useState("");
   const [focused, setFocused] = useState(false);
 
   const isBtnDisabled = useMemo(() => {
@@ -37,55 +56,52 @@ export default function MessageInput() {
   const isLoading = status === MessageInputStatus.LOADING;
 
   const BtnIconMap = {
-    normal: <ArrowUpCircleIcon className="size-5" />,
-    streaming: <PauseIcon className="size-5" />,
+    normal: <ArrowUpIcon className="size-4" />,
+    streaming: <PauseIcon className="size-4" />,
     loading: null,
   };
 
   const handelSend = async () => {
     if (status === MessageInputStatus.STREAMING) return;
     if (isBtnDisabled) return;
-    const id = await createConversation({ provider, message });
-
-    console.dir(id);
-    if (id) {
-      setMessage("");
-    }
+    onSend?.();
   };
 
   return (
-    <>
-      <div className="message-input">
-        <Textarea
-          className="input-area border-0 resize-none p-1 pt-4 px-2 text-tx-primary placeholder:text-tx-secondary focus:outline-0"
-          disableAnimation
-          disableAutosize
-          placeholder={t("main.conversation.placeholder")}
-          value={message}
-          onValueChange={setMessage}
-          onFocus={() => setFocused(true)}
-          onBlur={() => setFocused(false)}
-        />
-
-        <div className="bottom-bar h-[40px] flex justify-between items-center p-2 mb-2">
-          <div className="selecter-container w-[200px]">
-            <ProviderSelect value={provider} onChange={setProvider} />
-          </div>
-          <Tooltip content={btnTipContent}>
-            <Button
-              isLoading={isLoading}
-              radius="full"
-              color="primary"
-              size="sm"
-              disabled={isBtnDisabled}
-              onPress={handelSend}
-              isIconOnly
-            >
-              {BtnIconMap[status]}
-            </Button>
-          </Tooltip>
+    <div className={clsx("flex flex-col h-full", className)}>
+      <Textarea
+        value={message}
+        onValueChange={setMessage}
+        onFocus={() => setFocused(true)}
+        onBlur={() => setFocused(false)}
+        disableAnimation
+        disableAutosize
+        placeholder={placeholder}
+        rows={rows}
+        className="flex-1"
+        classNames={{
+          inputWrapper: "flex-1",
+          input: "h-full",
+        }}
+      />
+      <div className="flex justify-between items-center mt-3">
+        <div className="w-[200px]">
+          <ProviderSelect value={provider} onChange={setProvider} />
         </div>
+        <Tooltip content={btnTipContent}>
+          <Button
+            isLoading={isLoading}
+            radius="full"
+            color="primary"
+            size="sm"
+            disabled={isBtnDisabled}
+            onPress={handelSend}
+            isIconOnly
+          >
+            {BtnIconMap[status]}
+          </Button>
+        </Tooltip>
       </div>
-    </>
+    </div>
   );
 }
