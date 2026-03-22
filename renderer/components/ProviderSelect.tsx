@@ -10,7 +10,6 @@ type ProviderSelectProps = {
 export default function ProviderSelect(props: ProviderSelectProps) {
   const { value, onChange } = props;
   const { t } = useTranslation();
-
   const providers = useProvidersStore((s) => s.providers);
   const providerOptions = providers
     .filter((it) => it.visible)
@@ -55,7 +54,7 @@ export default function ProviderSelect(props: ProviderSelectProps) {
       <Select
         placeholder={t("main.conversation.selectModel")}
         size="sm"
-        value={value}
+        selectedKeys={[value]}
         onChange={(e) => onChange(e.target.value)}
         aria-label={t("main.conversation.selectModel")}
       >

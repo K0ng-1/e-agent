@@ -56,9 +56,9 @@ export default function MessageInput(props: Props) {
   const isLoading = status === MessageInputStatus.LOADING;
 
   const BtnIconMap = {
-    normal: <ArrowUpIcon className="size-4" />,
-    streaming: <PauseIcon className="size-4" />,
-    loading: null,
+    [MessageInputStatus.NORMAL]: <ArrowUpIcon className="size-4" />,
+    [MessageInputStatus.STREAMING]: <PauseIcon className="size-4" />,
+    [MessageInputStatus.LOADING]: null,
   };
 
   const handelSend = async () => {
@@ -94,7 +94,7 @@ export default function MessageInput(props: Props) {
             radius="full"
             color="primary"
             size="sm"
-            disabled={isBtnDisabled}
+            isDisabled={isBtnDisabled}
             onPress={handelSend}
             isIconOnly
           >

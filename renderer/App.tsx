@@ -1,4 +1,5 @@
 import { HeroUIProvider } from "@heroui/react";
+import { ToastProvider } from "@heroui/toast";
 import router from "./router";
 import React, { useEffect } from "react";
 import { RouterProvider } from "react-router";
@@ -34,6 +35,7 @@ export default function App() {
     <React.StrictMode>
       <ErrorBoundary>
         <HeroUIProvider className="w-full h-full">
+          <ToastProvider placement="top-center" toastOffset={25} />
           <RouterProvider router={router} />
         </HeroUIProvider>
       </ErrorBoundary>

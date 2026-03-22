@@ -1,11 +1,16 @@
-import { MENU_IDS, MESSAGE_ITEM_MENU_IDS } from "@common/constants";
+import {
+  DialogFeedback,
+  MENU_IDS,
+  MESSAGE_ITEM_MENU_IDS,
+} from "@common/constants";
 import { Message } from "@common/types";
-import { Button, Checkbox, ScrollShadow } from "@heroui/react";
+import { Button, Checkbox, ScrollShadow, addToast } from "@heroui/react";
 import { createContextMenu } from "@renderer/utils/contextMenu";
 import clsx from "clsx";
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import MessageRender from "./MessageRender";
+import { useBatchTimeAgo, useDialog, useMessages } from "@renderer/hooks";
 interface Props {
   messages: Message[];
 }
@@ -13,6 +18,9 @@ interface Props {
 export default function MessageList(props: Props) {
   const { messages } = props;
   const { t } = useTranslation();
+  const { formatTimeAgo } = useBatchTimeAgo();
+  const { createDialog } = useDialog();
+  const { deleteMessage } = useMessages();
   const [isBatchMode, setIsBatchMode] = useState(false);
   const [checkedIds, setCheckedIds] = useState<number[]>([]);
 
@@ -38,7 +46,10 @@ export default function MessageList(props: Props) {
         const msg = props.messages.find((msg) => msg.id === msgId);
         if (!msg) return;
         navigator.clipboard.writeText(msg.content).then(() => {
-          message.success(t("main.message.dialog.copySuccess"));
+          addToast({
+            color: "success",
+            description: t("main.message.dialog.copySuccess"),
+          });
         });
       },
     ],
@@ -49,7 +60,7 @@ export default function MessageList(props: Props) {
           title: "main.message.dialog.title",
           content: "main.message.dialog.messageDelete",
         });
-        if (res === "confirm") deleteMessage(msgId);
+        if (res === DialogFeedback.CONFIRM) deleteMessage(msgId);
       },
     ],
     [
@@ -80,6 +91,14 @@ export default function MessageList(props: Props) {
     setIsBatchMode(false);
     setCheckedIds([]);
   }
+
+  function scrollToBottom() {
+    const els = document.querySelectorAll(".message-list-item");
+    els[els.length - 1]?.scrollIntoView({ behavior: "instant", block: "end" });
+  }
+
+  useEffect(scrollToBottom, [messages]);
+
   return (
     <div className="flex flex-col h-full">
       <ScrollShadow className="message-list px-5 pt-6">
@@ -111,12 +130,11 @@ export default function MessageList(props: Props) {
                       textAlign: message.type === "question" ? "end" : "start",
                     }}
                   >
-                    {message.createdAt}
-                    {/* {formatTimeAgo(message.createdAt)} */}
+                    {formatTimeAgo(message.createdAt)}
                   </div>
                   {message.type === "question" ? (
                     <div
-                      className="msg-shadow p-2 rounded-md bg-bubble-self text-white"
+                      className="msg-shadow p-2 rounded-md bg-bubble-others text-tx-primary"
                       onContextMenu={() => handleContextMenu(message.id)}
                     >
                       <MessageRender
@@ -130,8 +148,7 @@ export default function MessageList(props: Props) {
                       className={clsx(
                         "msg-shadow p-2 px-6 rounded-md bg-bubble-others",
                         {
-                          "bg-bubble-others text-tx-primary":
-                            message.status !== "error",
+                          "text-tx-primary": message.status !== "error",
                           "text-red-300 font-bold": message.status === "error",
                         },
                       )}
@@ -162,12 +179,7 @@ export default function MessageList(props: Props) {
         <Button color="danger" size="sm" onPress={handleBatchDelete}>
           {t("main.message.batchActions.deleteSelected")}
         </Button>
-        <Button
-          color="primary"
-          size="sm"
-          variant="ghost"
-          onPress={quitBatchMode}
-        >
+        <Button size="sm" variant="shadow" onPress={quitBatchMode}>
           {t("dialog.cancel")}
         </Button>
       </div>

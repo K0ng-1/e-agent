@@ -6,23 +6,60 @@ import { throttle } from "@common/utils";
 import MessageInput from "@renderer/components/MessageInput";
 import MessageList from "@renderer/components/MessageList";
 import ResizeDivider from "@renderer/components/ResizeDivider";
-import { messages } from "@renderer/store/testData";
 import { useMessages } from "@renderer/hooks/useMessages";
+import { useConversation } from "@renderer/hooks";
 
 export default function Conversation() {
   const props = useParams<{ id: string }>();
   const { t } = useTranslation();
   const id = Number(props.id);
   if (!id) return null;
-  const { initialize: initializeMessages } = useMessages();
-  initializeMessages(id);
+  const {
+    initialize: initializeMessages,
+    messages,
+    getMessageInputValueById,
+    setMessageInputValueById,
+    sendMessage,
+  } = useMessages();
+  const { getConversationById } = useConversation();
 
   const [message, setMessage] = useState("");
   const [provider, setProvider] = useState("");
   const [listHeight, setListHeight] = useState(0);
   const [listScale, setListScale] = useState(0.7);
   const [maxListHeight, setMaxListHeight] = useState(window.innerHeight * 0.7);
+
+  useEffect(() => {
+    initializeMessages(id);
+    setMessage(getMessageInputValueById(id));
+
+    const conversation = getConversationById(id);
+    if (conversation) {
+      setProvider(`${conversation.providerId}:${conversation.selectedModel}`);
+    }
+  }, [
+    id,
+    initializeMessages,
+    setMessage,
+    getMessageInputValueById,
+    getConversationById,
+    setProvider,
+  ]);
+
+  function handleSetMessage(value: string) {
+    setMessage(value);
+    setMessageInputValueById(id, value);
+  }
+
   const handleSend = async () => {
+    const content = getMessageInputValueById(id);
+    if (!content.trim()) return;
+    await sendMessage({
+      type: "question",
+      content,
+      conversationId: id,
+    });
+    setMessageInputValueById(id, "");
     setMessage("");
   };
 
@@ -67,7 +104,7 @@ export default function Conversation() {
         <MessageInput
           className="pr-4"
           message={message}
-          setMessage={setMessage}
+          setMessage={handleSetMessage}
           provider={provider}
           setProvider={setProvider}
           placeholder={t("main.conversation.placeholder")}
