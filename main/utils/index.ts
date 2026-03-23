@@ -1,6 +1,9 @@
 import zh from "@locales/zh.json";
 import en from "@locales/en.json";
 import logManager from "@main/service/LogService";
+import configManager from "@main/service/ConfigService";
+import { CONFIG_KEYS } from "@common/constants";
+import { join } from "node:path";
 
 type MessageSchema = typeof zh;
 const messages: Record<string, MessageSchema> = { zh, en };
@@ -11,7 +14,7 @@ export function createTranslator() {
 
     try {
       const keys = key.split(".");
-      let result: any = messages["zh"];
+      let result: any = messages[configManager.get(CONFIG_KEYS.LANGUAGE)];
       for (const _key of keys) {
         result = result[_key];
       }
@@ -21,4 +24,12 @@ export function createTranslator() {
       return key;
     }
   };
+}
+
+let logo: string | null = null;
+export function createLogo() {
+  if (logo !== null) return logo;
+
+  logo = join(__dirname, "../../public/logo.ico");
+  return logo;
 }

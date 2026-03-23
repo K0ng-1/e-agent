@@ -6,12 +6,19 @@ import {
   CONVERSATION_ITEM_MENU_IDS,
   CONVERSATION_LIST_MENU_IDS,
   MESSAGE_ITEM_MENU_IDS,
+  CONFIG_KEYS,
 } from "@common/constants";
 import { createProvider } from "@main/providers";
+import configManager from "@main/service/ConfigService";
 import logManager from "@main/service/LogService";
 import menuManager from "@main/service/MenuService";
+import trayManager from "@main/service/TrayService";
 import windowManager from "@main/service/WindowService";
 import { BrowserWindow, ipcMain } from "electron";
+
+const handleTray = (minimizeToTray: boolean) => {
+  trayManager[minimizeToTray ? "create" : "destroy"]();
+};
 
 const registerMenus = (window: BrowserWindow) => {
   const conversationItemMenuItemClick = (id: string) => {
@@ -175,9 +182,20 @@ const registerMenus = (window: BrowserWindow) => {
   ]);
 };
 
-export function setupMainWindow() {
-  windowManager.onWindowCreate(WINDOW_NAMES.MAIN, registerMenus);
-  windowManager.create(WINDOW_NAMES.MAIN, MAIN_WIN_SIZE);
+export function setupMainWindow(): BrowserWindow | void {
+  windowManager.onWindowCreate(WINDOW_NAMES.MAIN, (window) => {
+    let minimizeToTray = configManager.get(CONFIG_KEYS.MINIMIZE_TO_TRAY);
+    configManager.onConfigChange((config) => {
+      if (minimizeToTray === config[CONFIG_KEYS.MINIMIZE_TO_TRAY]) return;
+      minimizeToTray = config[CONFIG_KEYS.MINIMIZE_TO_TRAY];
+      handleTray(minimizeToTray);
+    });
+
+    handleTray(minimizeToTray);
+
+    registerMenus(window);
+  });
+  const window = windowManager.create(WINDOW_NAMES.MAIN, MAIN_WIN_SIZE);
 
   ipcMain.on(
     IPC_EVENTS.START_A_DIALOGUE,
@@ -224,4 +242,6 @@ export function setupMainWindow() {
       }
     },
   );
+
+  return window;
 }

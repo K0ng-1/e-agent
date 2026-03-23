@@ -1,8 +1,9 @@
 import { ipcMain, Menu, type MenuItemConstructorOptions } from "electron";
 import logManager from "./LogService";
-import { IPC_EVENTS } from "@common/constants";
+import { CONFIG_KEYS, IPC_EVENTS } from "@common/constants";
 import { cloneDeep } from "@common/utils";
 import { createTranslator } from "@main/utils/index";
+import configManager from "./ConfigService";
 let t = createTranslator();
 class MenuService {
   private static _instance: MenuService;
@@ -26,7 +27,12 @@ class MenuService {
       },
     );
   }
-  private _setupLanguageChangeListener() {}
+  private _setupLanguageChangeListener() {
+    configManager.onConfigChange((config) => {
+      if (!config[CONFIG_KEYS.LANGUAGE]) return;
+      t = createTranslator();
+    });
+  }
 
   public static getInstance() {
     if (!this._instance) {

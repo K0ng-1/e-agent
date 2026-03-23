@@ -1,11 +1,12 @@
-import { IPC_EVENTS, ThemeMode } from "@common/constants";
+import { CONFIG_KEYS, IPC_EVENTS, ThemeMode } from "@common/constants";
 import { BrowserWindow, ipcMain, nativeTheme } from "electron";
-import logManager from "./LogService";
+import { logManager } from "./LogService";
+import { configManager } from "./ConfigService";
 
 class ThemeService {
   private static _instance: ThemeService;
   constructor() {
-    const themeMode = ThemeMode.DARK;
+    const themeMode = configManager.get(CONFIG_KEYS.THEME_MODE);
 
     if (themeMode) {
       nativeTheme.themeSource = themeMode;
@@ -17,6 +18,7 @@ class ThemeService {
   private _setupIpcEvent() {
     ipcMain.on(IPC_EVENTS.SET_THEME_MODE, (_, mode: ThemeMode) => {
       nativeTheme.themeSource = mode;
+      configManager.set(CONFIG_KEYS.THEME_MODE, mode);
     });
 
     ipcMain.handle(IPC_EVENTS.GET_THEME_MODE, () => {

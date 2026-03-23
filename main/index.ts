@@ -3,6 +3,8 @@ import started from "electron-squirrel-startup";
 import { setupWindows } from "./wins";
 import logManager from "./service/LogService";
 import loadExtension from "./loadExtensions";
+import configManager from "./service/ConfigService";
+import { CONFIG_KEYS } from "@common/constants";
 
 if (started) {
   app.quit();
@@ -14,7 +16,11 @@ app.on("ready", async () => {
 });
 
 app.on("window-all-closed", () => {
-  if (process.platform !== "darwin") {
+  if (
+    process.platform !== "darwin" &&
+    !configManager.get(CONFIG_KEYS.MINIMIZE_TO_TRAY)
+  ) {
+    logManager.info("app closing due to all windows being closed.");
     app.quit();
   }
 });

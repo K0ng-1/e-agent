@@ -1,4 +1,4 @@
-import { IPC_EVENTS, WINDOW_NAMES } from "@common/constants";
+import { CONFIG_KEYS, IPC_EVENTS, WINDOW_NAMES } from "@common/constants";
 import { WindowNames } from "@common/types";
 import { debounce } from "@common/utils";
 import {
@@ -12,6 +12,7 @@ import {
 import path from "node:path";
 import logManager from "./LogService";
 import themeManager from "./ThemeService";
+import configManager from "./ConfigService";
 
 interface WindowState {
   instance: BrowserWindow | void;
@@ -57,7 +58,8 @@ class WindowService {
   }
 
   private _isReallyClose(name: WindowNames | void) {
-    if (name === WINDOW_NAMES.MAIN) return true;
+    if (name === WINDOW_NAMES.MAIN)
+      return configManager.get(CONFIG_KEYS.MINIMIZE_TO_TRAY) === false;
     if (name === WINDOW_NAMES.SETTING) return false;
 
     return true;
@@ -262,7 +264,7 @@ class WindowService {
       );
     }
 
-    const minimizeToTray = false;
+    const minimizeToTray = configManager.get(CONFIG_KEYS.MINIMIZE_TO_TRAY);
 
     if (!minimizeToTray && !this.get(WINDOW_NAMES.MAIN)?.isVisible()) {
       return Object.values(this._winStates).forEach(
