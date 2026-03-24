@@ -2,6 +2,7 @@ import { CONFIG_KEYS, IPC_EVENTS, WINDOW_NAMES } from "@common/constants";
 import { WindowNames } from "@common/types";
 import { debounce } from "@common/utils";
 import {
+  app,
   BrowserWindow,
   BrowserWindowConstructorOptions,
   ipcMain,
@@ -13,6 +14,8 @@ import path from "node:path";
 import logManager from "./LogService";
 import themeManager from "./ThemeService";
 import configManager from "./ConfigService";
+import shortcutManager from "./ShortcutService";
+import { createLogo } from "@main/utils";
 
 interface WindowState {
   instance: BrowserWindow | void;
@@ -47,6 +50,7 @@ const SHARED_WINDOW_OPTIONS: BrowserWindowConstructorOptions = {
 
 class WindowService {
   private static _instance: WindowService;
+  private _logo: string = createLogo();
   private _winStates: Record<WindowNames | string, WindowState> = {
     main: { instance: void 0, isHidden: false, onCreate: [], onClosed: [] },
     setting: { instance: void 0, isHidden: false, onCreate: [], onClosed: [] },
@@ -112,6 +116,9 @@ class WindowService {
       isHiddenWin,
       size,
     });
+
+    this._handleWindowShortcuts(window);
+
     if (!isHiddenWin) {
       this._setupWinLifeCircle(window, name)._loadWindowTemplate(window, name);
       this._winStates[name].instance = window;
@@ -124,6 +131,38 @@ class WindowService {
 
     return window;
   }
+
+  private _handleWindowShortcuts(window: BrowserWindow) {
+    // 是否打包后，生产环境
+    const isPackaged = app.isPackaged;
+
+    const proxyCloseEvent = () => {
+      this.close(window, this._isReallyClose(this.getName(window)));
+      return true;
+    };
+
+    shortcutManager.registerForWindow(window, (input) => {
+      const isClose =
+        input.key === "F4" && input.alt && process.platform !== "darwin";
+      if (isClose) return proxyCloseEvent();
+
+      if (input.code === "KeyW" && input.modifiers.includes("control")) {
+        return proxyCloseEvent();
+      }
+
+      if (!isPackaged) return;
+
+      if (
+        input.type === "keyDown" &&
+        input.code === "KeyI" &&
+        input.modifiers.includes("control") &&
+        input.modifiers.includes("shift")
+      ) {
+        return true;
+      }
+    });
+  }
+
   private _setupWinLifeCircle(window: BrowserWindow, name: WindowNames) {
     const updateWinStatus = debounce(() => {
       !window?.isDestroyed() &&
@@ -285,8 +324,21 @@ class WindowService {
       ? (this._winStates[name].instance as BrowserWindow)
       : new BrowserWindow({
           ...SHARED_WINDOW_OPTIONS,
+          icon: this._logo,
           ...opts,
         });
+  }
+
+  public focus(window: BrowserWindow | null | void) {
+    if (!window) return;
+    const name = this.getName(window);
+    if (window.isMinimized()) {
+      window.restore();
+      logManager.info(`Window ${name} restored adn focused`);
+    } else {
+      logManager.info(`Window ${name} focused`);
+    }
+    window.focus();
   }
 
   public close(window: BrowserWindow | null | void, really: boolean = true) {

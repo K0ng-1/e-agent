@@ -9,6 +9,7 @@ import {
   MAIN_WIN_SIZE,
   WINDOW_NAMES,
 } from "@common/constants";
+import shortcutManager from "./ShortcutService";
 
 let t: ReturnType<typeof createTranslator> = createTranslator();
 
@@ -33,9 +34,8 @@ class TrayService {
 
     function showWindow() {
       const mainWindow = windowManager.get(WINDOW_NAMES.MAIN);
-      if (!mainWindow) return;
-
       if (
+        mainWindow &&
         !mainWindow.isDestroyed() &&
         mainWindow.isVisible() &&
         !mainWindow.isFocused()
@@ -43,15 +43,16 @@ class TrayService {
         return mainWindow.focus();
       }
 
-      if (mainWindow.isMinimized()) return mainWindow.restore();
+      if (mainWindow?.isMinimized()) return mainWindow?.restore();
 
-      if (mainWindow.isVisible() && mainWindow.isFocused()) return;
+      if (mainWindow?.isVisible() && mainWindow?.isFocused()) return;
 
       windowManager.create(WINDOW_NAMES.MAIN, MAIN_WIN_SIZE);
     }
     this._tray.setToolTip(t("tray.tooltip") ?? "e-agent");
 
-    // TODO: shortcuts
+    shortcutManager.register("CmdOrCtrl+N", "tray.showWindow", showWindow);
+
     this._tray.setContextMenu(
       Menu.buildFromTemplate([
         {
@@ -92,12 +93,14 @@ class TrayService {
 
     app.on("quit", () => {
       this.destroy();
+      shortcutManager.unregister("tray.showWindow");
     });
   }
 
   public destroy() {
     this._tray?.destroy();
     this._tray = null;
+    shortcutManager.unregister("tray.showWindow");
     if (this._removeLanguageListrener) {
       this._removeLanguageListrener();
       this._removeLanguageListrener = void 0;

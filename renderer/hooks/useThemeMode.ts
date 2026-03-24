@@ -1,7 +1,7 @@
-import { ThemeMode } from "@common/constants";
-import { SunIcon, MoonIcon, TvIcon } from "@heroicons/react/24/solid";
-import useThemeStore from "@renderer/store/theme";
 import { useEffect, useMemo } from "react";
+import { SunIcon, MoonIcon, TvIcon } from "@heroicons/react/24/solid";
+import { ThemeMode } from "@common/constants";
+import useThemeStore from "@renderer/store/theme";
 const iconMap = new Map([
   [ThemeMode.SYSTEM, TvIcon],
   [ThemeMode.LIGHT, SunIcon],
@@ -9,15 +9,17 @@ const iconMap = new Map([
 ]);
 export function useThemeMode() {
   const themeMode = useThemeStore((s) => s.themeMode);
-  const updateThemeMode = useThemeStore((s) => s.setThemeMode);
+  const _updateThemeMode = useThemeStore((s) => s.setThemeMode);
+  const isDarkMode = useThemeStore((s) => s.isDarkMode);
+  const setIsDarkMode = useThemeStore((s) => s.setIsDarkMode);
   const themeChangeCallbacks: Set<(mode: ThemeMode) => void> = new Set();
 
   const setThemeMode = (mode: ThemeMode) => {
-    updateThemeMode(mode);
+    _updateThemeMode(mode);
     window.api.setThemeMode(mode);
     if (mode === ThemeMode.SYSTEM) {
       window.api.getThemeMode().then((systemMode) => {
-        updateThemeMode(systemMode);
+        _updateThemeMode(systemMode);
       });
     }
   };
@@ -28,35 +30,44 @@ export function useThemeMode() {
     themeChangeCallbacks.add(callback);
   };
 
+  function updateThemeMode(mode: ThemeMode) {
+    if (getThemeMode() !== mode) {
+      setThemeMode(mode);
+    }
+  }
+
   useEffect(() => {
-    console.dir("????????");
+    console.dir("themeMode Change:" + themeMode);
     const cancel = window.api.onSystemThemeChange(async () => {
+      setIsDarkMode(await window.api.isDarkMode());
       const mode = await window.api.getThemeMode();
-      // updateThemeMode(mode);
+      _updateThemeMode(mode);
       themeChangeCallbacks.forEach((cb) => cb(mode));
     });
     (async () => {
-      updateThemeMode(await window.api.getThemeMode());
+      setIsDarkMode(await window.api.isDarkMode());
+      _updateThemeMode(await window.api.getThemeMode());
     })();
 
     return cancel;
-  }, [themeMode, updateThemeMode]);
-  const isDarkMode = useMemo(() => {
-    if (themeMode === ThemeMode.SYSTEM) {
-      return !!window.matchMedia("(prefers-color-scheme: dark)").matches;
-    }
-    return themeMode === ThemeMode.DARK;
-  }, [themeMode]);
+  }, [themeMode, _updateThemeMode]);
 
   const ThemeIcon = useMemo(
     () => iconMap.get(themeMode) || SunIcon,
     [themeMode],
   );
+
+  useEffect(() => {
+    document.documentElement.classList.remove("dark", "light", "system");
+    document.documentElement.classList.add(isDarkMode ? "dark" : "light");
+  }, [isDarkMode]);
+
   return {
     themeMode,
     isDarkMode,
     ThemeIcon,
     setThemeMode,
+    updateThemeMode,
     getThemeMode,
     onThemeChange,
   };

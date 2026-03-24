@@ -13,7 +13,6 @@ export const createInputSlice: StateCreator<
   InputSlice
 > = (set, get) => {
   function getMessageInputValueById(conversationId: number) {
-    console.dir(get().messagesInputValue);
     return get().messagesInputValue.get(conversationId) ?? "";
   }
 

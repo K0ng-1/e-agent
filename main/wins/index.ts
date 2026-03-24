@@ -1,9 +1,9 @@
 import setupDialogWindow from "./dialog";
 import { setupMainWindow } from "./main";
+import setupSettingWindow from "./setting";
 
 export function setupWindows() {
-  const window = setupMainWindow();
+  setupMainWindow();
   setupDialogWindow();
-  window?.webContents.openDevTools();
-  return window;
+  setupSettingWindow();
 }

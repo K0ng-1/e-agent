@@ -4,3 +4,8 @@ export { useDialog } from "./useDialog";
 export { useConversation } from "./useConversation";
 export { useMessages } from "./useMessages";
 export { useBatchTimeAgo } from "./useTimeAgo";
+export { useConfig } from "./useConfig";
+export { useFontSize } from "./useFontSize";
+export { usePrimaryColor } from "./usePrimaryColor";
+export { useNaiveLocale } from "./useNaiveLocale";
+export { useNaiveTheme } from "./useNaiveTheme";

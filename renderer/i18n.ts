@@ -2,6 +2,8 @@ import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
 import zh from "@locales/zh.json";
 import en from "@locales/en.json";
+import { CONFIG_KEYS } from "@common/constants";
+import { IConfig } from "@common/types";
 
 const resources = {
   zh: {
@@ -27,3 +29,12 @@ export const setLanguage = (lang: LanguageType) => {
 };
 
 export const getLanguage = () => i18n.language as LanguageType;
+
+export function updateLanguage(key: keyof IConfig, val: LanguageType) {
+  if (key === CONFIG_KEYS.LANGUAGE) {
+    const lang = getLanguage();
+    if (lang !== val) {
+      setLanguage(val);
+    }
+  }
+}

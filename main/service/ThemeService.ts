@@ -25,7 +25,12 @@ class ThemeService {
       return nativeTheme.themeSource;
     });
 
+    ipcMain.handle(IPC_EVENTS.IS_DARK_MODE, () => {
+      return nativeTheme.shouldUseDarkColors;
+    });
+
     nativeTheme.on("updated", () => {
+      console.log("nativeTheme updated:", nativeTheme.themeSource);
       BrowserWindow.getAllWindows().forEach((win) => {
         win.webContents.send(
           IPC_EVENTS.THEME_MODE_UPDATED,

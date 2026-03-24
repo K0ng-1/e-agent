@@ -1,5 +1,7 @@
+import { WINDOW_NAMES } from "@common/constants";
 import { Button, Select, SelectItem, SelectSection } from "@heroui/react";
 import useProvidersStore from "@renderer/store/providers";
+import { openWindow } from "@renderer/utils";
 import { useTranslation } from "react-i18next";
 
 type ProviderSelectProps = {
@@ -11,6 +13,22 @@ export default function ProviderSelect(props: ProviderSelectProps) {
   const { value, onChange } = props;
   const { t } = useTranslation();
   const providers = useProvidersStore((s) => s.providers);
+
+  if (!providers.length) {
+    return (
+      <span className="text-tx-primary text-[0.7rem]">
+        {t("main.conversation.goSettings")}
+        <Button
+          className="go-setting-btn px-1 font-bold"
+          size="sm"
+          onPress={() => openWindow(WINDOW_NAMES.SETTING)}
+        >
+          {t("main.conversation.settings")}
+        </Button>
+        {t("main.conversation.addModel")}
+      </span>
+    );
+  }
   const providerOptions = providers
     .filter((it) => it.visible)
     .map((it) => ({
@@ -22,7 +40,6 @@ export default function ProviderSelect(props: ProviderSelectProps) {
         value: `${it.id}:${model}`,
       })),
     }));
-  const handleSettingWindow = () => {};
 
   const SelectChildren = providerOptions.map((provider) => {
     const { key, label, children } = provider;
@@ -39,27 +56,15 @@ export default function ProviderSelect(props: ProviderSelectProps) {
   });
 
   return (
-    <>
-      {/* <span className="text-tx-primary text-[0.7rem]">
-        {t("main.conversation.goSettings")}
-        <Button
-          className="go-setting-btn px-1 font-bold"
-          size="sm"
-          onPress={handleSettingWindow}
-        >
-          {t("main.conversation.settings")}
-        </Button>
-        {t("main.conversation.addModel")}
-      </span> */}
-      <Select
-        placeholder={t("main.conversation.selectModel")}
-        size="sm"
-        selectedKeys={[value]}
-        onChange={(e) => onChange(e.target.value)}
-        aria-label={t("main.conversation.selectModel")}
-      >
-        {SelectChildren}
-      </Select>
-    </>
+    <Select
+      variant="faded"
+      placeholder={t("main.conversation.selectModel")}
+      size="sm"
+      selectedKeys={[value]}
+      onChange={(e) => onChange(e.target.value)}
+      aria-label={t("main.conversation.selectModel")}
+    >
+      {SelectChildren}
+    </Select>
   );
 }

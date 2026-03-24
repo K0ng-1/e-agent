@@ -1,10 +1,12 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import clsx from "clsx";
 import { Button, Textarea, Tooltip } from "@heroui/react";
 import ProviderSelect from "@renderer/components/ProviderSelect";
 import { ArrowUpIcon, PauseIcon } from "@heroicons/react/24/outline";
 import { MessageInputStatus } from "@renderer/types/enum";
+import { listenShortcut } from "@renderer/utils/shortcut";
+import { SHORTCUT_KEYS } from "@common/constants";
 
 interface Props {
   message: string;
@@ -66,6 +68,20 @@ export default function MessageInput(props: Props) {
     if (isBtnDisabled) return;
     onSend?.();
   };
+
+  useEffect(() => {
+    const unlisten = listenShortcut(SHORTCUT_KEYS.SEND_MESSAGE, () => {
+      if (
+        status === MessageInputStatus.STREAMING ||
+        isBtnDisabled ||
+        !focused
+      ) {
+        return;
+      }
+      handelSend();
+    });
+    return unlisten;
+  }, []);
 
   return (
     <div className={clsx("flex flex-col h-full", className)}>

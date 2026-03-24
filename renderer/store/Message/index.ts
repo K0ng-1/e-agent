@@ -37,8 +37,6 @@ export const useMessagesStore = create<Store>()((set, get) => {
     if (isLoaded) return;
 
     const saved = await dataBase.messages.where({ conversationId }).toArray();
-    console.dir(get().messages);
-    console.dir(saved);
     set({ messages: uniqueByKey(saved, "id") });
   };
 

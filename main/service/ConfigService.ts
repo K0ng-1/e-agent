@@ -34,8 +34,9 @@ class ConfigService {
 
   private _setupIpcEvents(): void {
     const handleUpdate = debounce((val) => this.update(val), 200);
-    ipcMain.handle(IPC_EVENTS.GET_CONFIG, (_, key) => this.get(key));
-    ipcMain.on(IPC_EVENTS.SET_CONFIG, (_, key, val) => this.set(key, val));
+    const handleSet = debounce((key, val) => this.set(key, val), 200);
+    ipcMain.handle(IPC_EVENTS.GET_CONFIG, (_, key) => this.get<IConfig[keyof IConfig]>(key));
+    ipcMain.on(IPC_EVENTS.SET_CONFIG, (_, key, val) => handleSet(key, val));
     ipcMain.on(IPC_EVENTS.UPDATE_CONFIG, (_, config) => handleUpdate(config));
   }
 

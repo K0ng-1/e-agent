@@ -7,8 +7,9 @@ import {
 } from "@heroicons/react/24/outline";
 import ThemeSwitcher from "./ThemeSwitcher";
 import { Tooltip } from "@heroui/react";
+import { openWindow } from "@renderer/utils";
+import { WINDOW_NAMES } from "@common/constants";
 export default function NavBar() {
-  const openSettingWindow = () => {};
   const { t } = useTranslation();
 
   return (
@@ -30,7 +31,7 @@ export default function NavBar() {
         </li>
         <li
           className="sidebar-item mt-3 no-drag cursor-pointer hover:text-primary-subtle"
-          onClick={openSettingWindow}
+          onClick={() => openWindow(WINDOW_NAMES.SETTING)}
         >
           <Tooltip content={t("main.sidebar.settings")} placement="right">
             <Cog8ToothIcon className="w-5 h-5" />

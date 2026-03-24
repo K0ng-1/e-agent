@@ -1,12 +1,17 @@
 import {
+  CONFIG_KEYS,
   DialogFeedback,
   IPC_EVENTS,
+  SHORTCUT_KEYS,
   ThemeMode,
   WINDOW_NAMES,
 } from "@common/constants";
+import { IConfig } from "@common/types";
 import { contextBridge, ipcRenderer } from "electron";
 
 const api: WindowApi = {
+  openWindow: (name: WINDOW_NAMES) =>
+    ipcRenderer.send(`${IPC_EVENTS.OPEN_WINDOW}:${name}`),
   closeWindow: () => ipcRenderer.send(IPC_EVENTS.CLOSE_WINDOW),
   minimizeWindow: () => ipcRenderer.send(IPC_EVENTS.MINIMIZE_WINDOW),
   maximizeWindow: () => ipcRenderer.send(IPC_EVENTS.MAXIMIZE_WINDOW),
@@ -19,6 +24,7 @@ const api: WindowApi = {
   setThemeMode: (mode: ThemeMode) =>
     ipcRenderer.send(IPC_EVENTS.SET_THEME_MODE, mode),
   getThemeMode: () => ipcRenderer.invoke(IPC_EVENTS.GET_THEME_MODE),
+  isDarkMode: () => ipcRenderer.invoke(IPC_EVENTS.IS_DARK_MODE),
   onSystemThemeChange: (callback: (theme: ThemeMode) => void) => {
     const handler = (_: Electron.IpcRendererEvent, theme: ThemeMode) =>
       callback(theme);
@@ -37,6 +43,26 @@ const api: WindowApi = {
     ipcRenderer.removeAllListeners(`${IPC_EVENTS.SHOW_CONTEXT_MENU}:${menuId}`),
 
   viewIsReady: () => ipcRenderer.send(IPC_EVENTS.RENDERER_IS_READY),
+
+  getConfig: (key: CONFIG_KEYS) =>
+    ipcRenderer.invoke(IPC_EVENTS.GET_CONFIG, key),
+  setConfig: (key: CONFIG_KEYS, value: IConfig[CONFIG_KEYS]) =>
+    ipcRenderer.send(IPC_EVENTS.SET_CONFIG, key, value),
+  updateConfig: (config: IConfig) =>
+    ipcRenderer.send(IPC_EVENTS.UPDATE_CONFIG, config),
+  onConfigChange: (callback: (config: IConfig) => void) => {
+    const handleCallback = (_: Electron.IpcRendererEvent, config: IConfig) =>
+      callback(config);
+    ipcRenderer.on(IPC_EVENTS.CONFIG_UPDATED, handleCallback);
+    return () => {
+      ipcRenderer.off(IPC_EVENTS.CONFIG_UPDATED, handleCallback);
+    };
+  },
+  removeConfigChangeListener: (callback: (config: IConfig) => void) => {
+    ipcRenderer.removeListener(IPC_EVENTS.CONFIG_UPDATED, (_, config) =>
+      callback(config),
+    );
+  },
 
   createDialog: (params: CreateDialogProps) => {
     return new Promise(async (resolve) => {
@@ -77,6 +103,14 @@ const api: WindowApi = {
     return () =>
       ipcRenderer.removeListener(
         `${IPC_EVENTS.START_A_DIALOGUE}back${messageId}`,
+        callback,
+      );
+  },
+  onShortcutCalled: (key: SHORTCUT_KEYS, callback: () => void) => {
+    ipcRenderer.on(`${IPC_EVENTS.SHORTCUT_CALLED}${key}`, callback);
+    return () =>
+      ipcRenderer.removeListener(
+        `${IPC_EVENTS.SHORTCUT_CALLED}${key}`,
         callback,
       );
   },

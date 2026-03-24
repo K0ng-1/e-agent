@@ -3,13 +3,13 @@ import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import ErrorBoundary from "@renderer/components/ErrorBoundary";
 import { logger } from "@renderer/utils";
-import { useDialog, useThemeMode } from "@renderer/hooks";
+import { useConfig, useDialog } from "@renderer/hooks";
 import TitleBar from "@renderer/components/Layout/TitleBar";
 import DragRegion from "@renderer/components/DragRegion";
 
 export default function App() {
   const { t } = useTranslation();
-  const { themeMode } = useThemeMode();
+  useConfig();
   const { params, confirmDialog, cancelDialog } = useDialog();
   const { title, content, confirmText, cancelText } = params;
 
@@ -17,19 +17,12 @@ export default function App() {
     logger.info("Dialog App Mounted");
   }, []);
 
-  useEffect(() => {
-    document.documentElement.classList.remove("dark", "light", "system");
-    document.documentElement.className = themeMode;
-  }, [themeMode]);
-
-  console.dir("themeMode, " + themeMode);
-
   return (
     <React.StrictMode>
       <ErrorBoundary>
         <HeroUIProvider className="w-full h-full flex flex-col">
           <TitleBar isMinimizable={false} isMaximizable={false}>
-            <DragRegion className="p-3 text-sm font-bold text-tx-primary">
+            <DragRegion className="text-sm flex items-center w-full h-full font-bold text-tx-primary pl-3">
               {t(title ?? "")}
             </DragRegion>
           </TitleBar>

@@ -1,3 +1,4 @@
+import { BrowserWindow, ipcMain } from "electron";
 import {
   WINDOW_NAMES,
   MAIN_WIN_SIZE,
@@ -7,14 +8,15 @@ import {
   CONVERSATION_LIST_MENU_IDS,
   MESSAGE_ITEM_MENU_IDS,
   CONFIG_KEYS,
+  SHORTCUT_KEYS,
 } from "@common/constants";
 import { createProvider } from "@main/providers";
+import shortcutManager from "@main/service/ShortcutService";
 import configManager from "@main/service/ConfigService";
-import logManager from "@main/service/LogService";
+import windowManager from "@main/service/WindowService";
 import menuManager from "@main/service/MenuService";
 import trayManager from "@main/service/TrayService";
-import windowManager from "@main/service/WindowService";
-import { BrowserWindow, ipcMain } from "electron";
+import logManager from "@main/service/LogService";
 
 const handleTray = (minimizeToTray: boolean) => {
   trayManager[minimizeToTray ? "create" : "destroy"]();
@@ -182,6 +184,22 @@ const registerMenus = (window: BrowserWindow) => {
   ]);
 };
 
+const destroyMenus = () => {
+  menuManager.destroyMenu(MENU_IDS.CONVERSATION_ITEM);
+  menuManager.destroyMenu(MENU_IDS.CONVERSATION_LIST);
+  menuManager.destroyMenu(MENU_IDS.MESSAGE_ITEM);
+};
+
+const registerShortcuts = (window: BrowserWindow) => {
+  shortcutManager.registerForWindow(window, (input) => {
+    if (input.code === "Enter" && input.modifiers.includes("control")) {
+      window.webContents.send(
+        IPC_EVENTS.SHORTCUT_CALLED + SHORTCUT_KEYS.SEND_MESSAGE,
+      );
+    }
+  });
+};
+
 export function setupMainWindow(): BrowserWindow | void {
   windowManager.onWindowCreate(WINDOW_NAMES.MAIN, (window) => {
     let minimizeToTray = configManager.get(CONFIG_KEYS.MINIMIZE_TO_TRAY);
@@ -194,7 +212,9 @@ export function setupMainWindow(): BrowserWindow | void {
     handleTray(minimizeToTray);
 
     registerMenus(window);
+    registerShortcuts(window);
   });
+  windowManager.onWindowClosed(WINDOW_NAMES.MAIN, destroyMenus);
   const window = windowManager.create(WINDOW_NAMES.MAIN, MAIN_WIN_SIZE);
 
   ipcMain.on(
@@ -245,3 +265,5 @@ export function setupMainWindow(): BrowserWindow | void {
 
   return window;
 }
+
+export default setupMainWindow;

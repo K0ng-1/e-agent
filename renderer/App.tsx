@@ -9,13 +9,13 @@ import { initProviders } from "./dataBase";
 import useProvidersStore from "./store/providers";
 import useConversationStore from "./store/Conversations";
 import { logger } from "./utils";
-import { useThemeMode } from "./hooks";
+import { useConfig, useThemeMode } from "./hooks";
 
 export default function App() {
   const { t } = useTranslation();
-  const { themeMode } = useThemeMode();
   const initializeProviders = useProvidersStore((s) => s.initialize);
   const initializeConversations = useConversationStore((s) => s.initialize);
+  useConfig();
   useEffect(() => {
     document.querySelector("title")!.textContent = t("app.title");
     (async () => {
@@ -25,11 +25,6 @@ export default function App() {
     })();
     logger.info("App Mounted");
   }, []);
-
-  useEffect(() => {
-    document.documentElement.classList.remove("dark", "light", "system");
-    document.documentElement.className = themeMode;
-  }, [themeMode]);
 
   return (
     <React.StrictMode>

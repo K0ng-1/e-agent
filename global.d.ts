@@ -35,6 +35,7 @@ interface DialogueBackStream {
   data: UniversalChunk & { isError?: boolean };
 }
 interface WindowApi {
+  openWindow(name: WINDOW_NAMES): void;
   closeWindow(): void;
   minimizeWindow(): void;
   maximizeWindow(): void;
@@ -43,6 +44,7 @@ interface WindowApi {
 
   setThemeMode(mode: ThemeMode): void;
   getThemeMode(): Promise<ThemeMode>;
+  isDarkMode(): Promise<boolean>;
   onSystemThemeChange(callback: (theme: ThemeMode) => void): () => void;
 
   showContextMenu(menuId: string, dynamicOptions?: string): Promise<any>;
@@ -50,6 +52,12 @@ interface WindowApi {
   removeContextMenuListener(menuId: string): void;
 
   viewIsReady(): void;
+
+  getConfig(key: CONFIG_KEYS): Promise<IConfig[keyof IConfig]>;
+  setConfig(key: CONFIG_KEYS, value: IConfig[keyof IConfig]): void;
+  updateConfig(config: IConfig): void;
+  onConfigChange(callback: (config: IConfig) => void): () => void;
+  removeConfigChangeListener(callback: (config: IConfig) => void): void;
 
   createDialog(params: CreateDialogProps): Promise<DialogFeedback>;
   _dialogFeedback(val: DialogFeedback, winId: number): void;
@@ -60,6 +68,8 @@ interface WindowApi {
     cb: (data: DialogueBackStream) => void,
     messageId: number,
   ): () => void;
+
+  onShortcutCalled(key: SHORTCUT_KEYS, callback: () => void): () => void;
 
   logger: {
     debug(message: string, ...meta: any[]): void;

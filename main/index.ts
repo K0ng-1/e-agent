@@ -11,7 +11,7 @@ if (started) {
 }
 
 app.on("ready", async () => {
-  await loadExtension(app);
+  // await loadExtension(app);
   setupWindows();
 });
 
