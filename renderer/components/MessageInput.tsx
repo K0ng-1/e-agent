@@ -31,7 +31,7 @@ export default function MessageInput(props: Props) {
     rows = 3,
   } = props;
   const { t } = useTranslation();
-  const [status, setStatus] = useState<MessageInputStatus>(
+  const [status] = useState<MessageInputStatus>(
     MessageInputStatus.NORMAL,
   );
   const [focused, setFocused] = useState(false);

@@ -1,4 +1,4 @@
-import { BrowserWindow, ipcMain } from "electron";
+import { ipcMain } from "electron";
 import { IPC_EVENTS, WINDOW_NAMES } from "@common/constants";
 import windowManager from "@main/service/WindowService";
 

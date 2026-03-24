@@ -109,7 +109,7 @@ class WindowService {
     if (this.get(name)) return;
 
     const isHiddenWin = this._isHiddenWin(name);
-    let window = this._createWinInstance(name, { ...size, ...moreOpts });
+    const window = this._createWinInstance(name, { ...size, ...moreOpts });
 
     this._listenWinReady({
       win: window,

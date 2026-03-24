@@ -25,7 +25,7 @@ function formatTimeOny(date: Date): string {
   return `${hours}:${minutes}`;
 }
 
-function getWeekDay(date: Date, t: any): string {
+function getWeekDay(date: Date, t: TFunction<"translation", undefined>): string {
   const weekDays = [
     t("timeAgo.weekday.sun"),
     t("timeAgo.weekday.mon"),

@@ -10,7 +10,7 @@
     "package": "electron-forge package",
     "make": "electron-forge make",
     "publish": "electron-forge publish",
-    "lint": "eslint --ext .ts,.tsx ."
+    "lint": "eslint --ext .ts,.tsx . --fix"
   },
   "keywords": [],
   "author": {
@@ -27,20 +27,18 @@
     "@electron-forge/plugin-auto-unpack-natives": "^7.11.1",
     "@electron-forge/plugin-fuses": "^7.11.1",
     "@electron-forge/plugin-vite": "^7.11.1",
-    "@electron-toolkit/eslint-config": "^2.1.0",
     "@electron/fuses": "^1.8.0",
     "@eslint/js": "^9.39.4",
     "@tailwindcss/typography": "^0.5.19",
     "@types/electron-squirrel-startup": "^1.0.2",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
-    "@typescript-eslint/eslint-plugin": "^8.57.0",
-    "@typescript-eslint/parser": "^8.57.0",
     "electron": "^41.0.0",
     "electron-devtools-installer": "^4.0.0",
     "eslint": "^9.39.4",
     "eslint-plugin-import": "^2.32.0",
     "typescript": "~5.9.3",
+    "typescript-eslint": "^8.57.2",
     "vite": "^7.3.1"
   },
   "dependencies": {

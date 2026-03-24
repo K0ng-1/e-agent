@@ -47,7 +47,7 @@ interface WindowApi {
   isDarkMode(): Promise<boolean>;
   onSystemThemeChange(callback: (theme: ThemeMode) => void): () => void;
 
-  showContextMenu(menuId: string, dynamicOptions?: string): Promise<any>;
+  showContextMenu(menuId: string, dynamicOptions?: string): Promise<unknown>;
   contextMenuItemClick(menuId: string, cb: (id: string) => void): void;
   removeContextMenuListener(menuId: string): void;
 
@@ -72,10 +72,10 @@ interface WindowApi {
   onShortcutCalled(key: SHORTCUT_KEYS, callback: () => void): () => void;
 
   logger: {
-    debug(message: string, ...meta: any[]): void;
-    info(message: string, ...meta: any[]): void;
-    warn(message: string, ...meta: any[]): void;
-    error(message: string, ...meta: any[]): void;
+    debug(message: string, ...meta: unknown[]): void;
+    info(message: string, ...meta: unknown[]): void;
+    warn(message: string, ...meta: unknown[]): void;
+    error(message: string, ...meta: unknown[]): void;
   };
 }
 

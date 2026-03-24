@@ -10,7 +10,7 @@ interface Props {
   isStreaming: boolean;
 }
 export default function MessageRender(props: Props) {
-  const { msgId, content, isStreaming } = props;
+  const {  content } = props;
   const { t } = useTranslation();
 
   return (

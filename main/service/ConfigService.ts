@@ -83,7 +83,7 @@ class ConfigService {
     return cloneDeep(this._config);
   }
 
-  public get<T = any>(key: ConfigKeys): T {
+  public get<T = unknown>(key: ConfigKeys): T {
     return this._config[key] as T;
   }
 

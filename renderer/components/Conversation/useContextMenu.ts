@@ -1,4 +1,4 @@
-import { useLocation, useNavigate, useParams, useRoutes } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 import { MENU_IDS, CONVERSATION_LIST_MENU_IDS } from "@common/constants";
 import useConversationStore from "@renderer/store/Conversations";
 import { createContextMenu } from "@renderer/utils/contextMenu";

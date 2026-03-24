@@ -48,8 +48,8 @@ const hexToHsl = (hex: string) => {
   const max = Math.max(r, g, b),
     min = Math.min(r, g, b);
   let h = 0,
-    s,
-    l = (max + min) / 2;
+    s;
+  const l = (max + min) / 2;
 
   if (max !== min) {
     const d = max - min;

@@ -65,23 +65,25 @@ const api: WindowApi = {
   },
 
   createDialog: (params: CreateDialogProps) => {
-    return new Promise(async (resolve) => {
-      const feedback = (await ipcRenderer.invoke(
-        `${IPC_EVENTS.OPEN_WINDOW}:${WINDOW_NAMES.DIALOG}`,
-        {
-          title: params.title ?? "",
-          content: params.content ?? "",
-          confirmText: params.confirmText ?? "",
-          cancelText: params.cancelText ?? "",
-        },
-      )) as DialogFeedback;
-      if (feedback === DialogFeedback.CONFIRM) {
-        params.onConfirm?.();
-      }
-      if (feedback === DialogFeedback.CANCEL) {
-        params.onCancel?.();
-      }
-      resolve(feedback);
+    return new Promise((resolve) => {
+      (async ()=> {
+        const feedback = (await ipcRenderer.invoke(
+          `${IPC_EVENTS.OPEN_WINDOW}:${WINDOW_NAMES.DIALOG}`,
+          {
+            title: params.title ?? "",
+            content: params.content ?? "",
+            confirmText: params.confirmText ?? "",
+            cancelText: params.cancelText ?? "",
+          },
+        )) as DialogFeedback;
+        if (feedback === DialogFeedback.CONFIRM) {
+          params.onConfirm?.();
+        }
+        if (feedback === DialogFeedback.CANCEL) {
+          params.onCancel?.();
+        }
+        resolve(feedback);
+      })()
     });
   },
   _dialogFeedback: (val: DialogFeedback, winId: number) =>
@@ -116,13 +118,13 @@ const api: WindowApi = {
   },
 
   logger: {
-    debug: (message: string, ...meta: any[]) =>
+    debug: (message: string, ...meta: unknown[]) =>
       ipcRenderer.send(IPC_EVENTS.LOG_DEBUG, message, ...meta),
-    info: (message: string, ...meta: any[]) =>
+    info: (message: string, ...meta: unknown[]) =>
       ipcRenderer.send(IPC_EVENTS.LOG_INFO, message, ...meta),
-    warn: (message: string, ...meta: any[]) =>
+    warn: (message: string, ...meta: unknown[]) =>
       ipcRenderer.send(IPC_EVENTS.LOG_WARN, message, ...meta),
-    error: (message: string, ...meta: any[]) =>
+    error: (message: string, ...meta: unknown[]) =>
       ipcRenderer.send(IPC_EVENTS.LOG_ERROR, message, ...meta),
   },
 };

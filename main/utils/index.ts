@@ -14,6 +14,7 @@ export function createTranslator() {
 
     try {
       const keys = key.split(".");
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       let result: any = messages[configManager.get(CONFIG_KEYS.LANGUAGE)];
       for (const _key of keys) {
         result = result[_key];

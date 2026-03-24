@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { DialogFeedback } from "@common/constants";
-import useThemeMode from "./useThemeMode";
 
 export function useDialog() {
   const [params, setParams] = useState<CreateDialogProps>({

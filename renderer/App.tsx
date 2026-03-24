@@ -9,7 +9,7 @@ import { initProviders } from "./dataBase";
 import useProvidersStore from "./store/providers";
 import useConversationStore from "./store/Conversations";
 import { logger } from "./utils";
-import { useConfig, useThemeMode } from "./hooks";
+import { useConfig } from "./hooks";
 
 export default function App() {
   const { t } = useTranslation();

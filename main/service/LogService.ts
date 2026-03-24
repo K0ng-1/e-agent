@@ -52,16 +52,16 @@ class LogService {
   }
 
   private _setupIpcEvents() {
-    ipcMain.on(IPC_EVENTS.LOG_DEBUG, (_, message: string, ...meta: any[]) =>
+    ipcMain.on(IPC_EVENTS.LOG_DEBUG, (_, message: string, ...meta: unknown[]) =>
       this.debug(message, ...meta),
     );
-    ipcMain.on(IPC_EVENTS.LOG_INFO, (_, message: string, ...meta: any[]) =>
+    ipcMain.on(IPC_EVENTS.LOG_INFO, (_, message: string, ...meta: unknown[]) =>
       this.info(message, ...meta),
     );
-    ipcMain.on(IPC_EVENTS.LOG_WARN, (_, message: string, ...meta: any[]) =>
+    ipcMain.on(IPC_EVENTS.LOG_WARN, (_, message: string, ...meta: unknown[]) =>
       this.warn(message, ...meta),
     );
-    ipcMain.on(IPC_EVENTS.LOG_ERROR, (_, message: string, ...meta: any[]) =>
+    ipcMain.on(IPC_EVENTS.LOG_ERROR, (_, message: string, ...meta: unknown[]) =>
       this.error(message, ...meta),
     );
   }
@@ -117,42 +117,42 @@ class LogService {
   /**
    * 调试日志
    * @param {string} message - 日志消息
-   * @param {any[]} meta - 附加的元数据
+   * @param {unknown[]} meta - 附加的元数据
    */
-  public debug(message: string, ...meta: any[]): void {
+  public debug(message: string, ...meta: unknown[]): void {
     log.debug(message, ...meta);
   }
 
   /**
    * 信息日志
    * @param {string} message - 日志消息
-   * @param {any[]} meta - 附加的元数据
+   * @param {unknown[]} meta - 附加的元数据
    */
-  public info(message: string, ...meta: any[]): void {
+  public info(message: string, ...meta: unknown[]): void {
     log.info(message, ...meta);
   }
 
   /**
    * 警告日志
    * @param {string} message - 日志消息
-   * @param {any[]} meta - 附加的元数据
+   * @param {unknown[]} meta - 附加的元数据
    */
-  public warn(message: string, ...meta: any[]): void {
+  public warn(message: string, ...meta: unknown[]): void {
     log.warn(message, ...meta);
   }
 
   /**
    * 错误日志
    * @param {string} message - 日志消息
-   * @param {any[]} meta - 附加的元数据
+   * @param {unknown[]} meta - 附加的元数据
    */
-  public error(message: string, ...meta: any[]): void {
+  public error(message: string, ...meta: unknown[]): void {
     log.error(message, ...meta);
   }
 
   public logApiRequest(
     endpoint: string,
-    data: any = {},
+    data: unknown = {},
     method: string = "POST",
   ): void {
     this.info(
@@ -162,7 +162,7 @@ class LogService {
 
   public logApiResponse(
     endpoint: string,
-    response: any = {},
+    response: unknown = {},
     statusCode: number = 200,
     responseTime: number = 0,
   ): void {
@@ -180,7 +180,7 @@ class LogService {
   public logUserOperation(
     operation: string,
     userId: string = "unknown",
-    details: any = {},
+    details: unknown = {},
   ): void {
     this.info(
       `User Operation: ${operation} by ${userId}, Details: ${JSON.stringify(details)}`,

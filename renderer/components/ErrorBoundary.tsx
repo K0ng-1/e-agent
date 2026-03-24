@@ -1,5 +1,5 @@
 import { logger } from "@renderer/utils";
-import React from "react";
+import React, { ErrorInfo } from "react";
 import TitleBar from "./Layout/TitleBar";
 import DragRegion from "./DragRegion";
 
@@ -16,11 +16,11 @@ export default class ErrorBoundary extends React.Component<
     this.state = { hasError: false };
   }
 
-  static getDerivedStateFromError(_error: Error) {
+  static getDerivedStateFromError() {
     return { hasError: true };
   }
 
-  componentDidCatch(error: Error, errorInfo: any) {
+  componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     logger.error(
       "React Error Boundary caught an error:",
       error,

@@ -7,7 +7,7 @@ import useProvidersStore from "../providers";
 import { listenDialogueBack } from "@renderer/utils/dialogue";
 import { createInputSlice, InputSlice } from "./inputSlice";
 import { messages } from "../testData";
-import { useTranslation } from "react-i18next";
+import i18next from "i18next";
 
 type State = {
   messages: Message[];
@@ -28,7 +28,7 @@ export type Store = State & Actions & InputSlice;
 const msgContentMap = new Map<number, string>();
 export const stopMethods = new Map<number, () => void>();
 
-export const useMessagesStore = create<Store>()((set, get) => {
+export const useMessagesStore = create<Store>()((set, get, ...args) => {
   const initialize = async (conversationId: number) => {
     if (!conversationId) return;
     const isLoaded = get().messages.some(
@@ -47,7 +47,7 @@ export const useMessagesStore = create<Store>()((set, get) => {
   };
 
   const _updateConversation = async (conversationId: number) => {
-    const { updateConversation } = useConversationStore();
+    const { updateConversation } = useConversationStore.getState();
     const conversation = await dataBase.conversations.get(conversationId);
     conversation && updateConversation(conversation);
   };
@@ -76,11 +76,11 @@ export const useMessagesStore = create<Store>()((set, get) => {
 
     // TODO: 调用大模型
 
-    const { getConversationById } = useConversationStore();
+    const { getConversationById } = useConversationStore.getState();
     const conversation = getConversationById(message.conversationId);
     if (!conversation) return loadingMsgId;
 
-    const { providers } = useProvidersStore();
+    const { providers } = useProvidersStore.getState();
 
     const provider = providers.find((p) => p.id === conversation.providerId);
 
@@ -139,8 +139,9 @@ export const useMessagesStore = create<Store>()((set, get) => {
   };
 
   const stopMessage = async (id: number, update: boolean = true) => {
-    const { t } = useTranslation();
+    const { t } = i18next;
     const stop = stopMethods.get(id);
+     
     stop && stop?.();
     if (update) {
       const msgContent = messages.find((msg) => msg.id === id)?.content ?? "";
@@ -155,7 +156,7 @@ export const useMessagesStore = create<Store>()((set, get) => {
   };
 
   const updateMessage = async (id: number, updates: Partial<Message>) => {
-    let currentMsg = cloneDeep(
+    const currentMsg = cloneDeep(
       get().messages.find((message) => message.id === id),
     );
     if (!currentMsg) return;
@@ -190,7 +191,7 @@ export const useMessagesStore = create<Store>()((set, get) => {
     deleteMessage,
     getMessagesByConversationId,
 
-    ...createInputSlice(set, get, undefined as any),
+    ...createInputSlice(set, get, ...args),
   };
 });
 
