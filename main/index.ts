@@ -11,7 +11,9 @@ if (started) {
 }
 
 app.on("ready", async () => {
-  loadExtension(app);
+  if (!app.isPackaged) {
+    loadExtension(app);
+  }
   setupWindows();
 });
 

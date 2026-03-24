@@ -220,9 +220,16 @@ class WindowService {
       height: size.height ?? 0,
     });
 
-    loadingView.webContents.loadFile(
-      path.join(__dirname, "../../public/loading.html"),
-    );
+    let filePath = "";
+    if (app.isPackaged) {
+      filePath = path.join(
+        __dirname,
+        `../renderer/${MAIN_WINDOW_VITE_NAME}/loading.html`,
+      );
+    } else {
+      filePath = path.join(__dirname, "../../public/loading.html");
+    }
+    loadingView.webContents.loadFile(filePath);
 
     const onRendererIsReady = (e: IpcMainEvent) => {
       if (e.sender !== window?.webContents || rendererIsReady) return;

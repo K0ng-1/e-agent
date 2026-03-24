@@ -3,7 +3,8 @@ import en from "@locales/en.json";
 import logManager from "@main/service/LogService";
 import configManager from "@main/service/ConfigService";
 import { CONFIG_KEYS } from "@common/constants";
-import { join } from "node:path";
+import path from "node:path";
+import { app } from "electron";
 
 type MessageSchema = typeof zh;
 const messages: Record<string, MessageSchema> = { zh, en };
@@ -30,7 +31,13 @@ export function createTranslator() {
 let logo: string | null = null;
 export function createLogo() {
   if (logo !== null) return logo;
-
-  logo = join(__dirname, "../../public/logo.ico");
+  if (app.isPackaged) {
+    logo = path.join(
+      __dirname,
+      `../renderer/${MAIN_WINDOW_VITE_NAME}/logo.ico`,
+    );
+  } else {
+    logo = path.join(__dirname, "../../public/logo.ico");
+  }
   return logo;
 }

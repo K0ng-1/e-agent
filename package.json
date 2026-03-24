@@ -17,6 +17,10 @@
     "name": "limingjiang",
     "email": "limingjiang0010@deppon.com"
   },
+  "build": {
+    "appId": "com.deppon.eagent",
+    "icon": "public/logo.ico"
+  },
   "license": "MIT",
   "devDependencies": {
     "@electron-forge/cli": "^7.11.1",
