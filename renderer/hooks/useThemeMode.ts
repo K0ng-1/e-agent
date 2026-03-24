@@ -17,11 +17,6 @@ export function useThemeMode() {
   const setThemeMode = (mode: ThemeMode) => {
     _updateThemeMode(mode);
     window.api.setThemeMode(mode);
-    if (mode === ThemeMode.SYSTEM) {
-      window.api.getThemeMode().then((systemMode) => {
-        _updateThemeMode(systemMode);
-      });
-    }
   };
 
   const getThemeMode = () => themeMode;

@@ -38,11 +38,14 @@ export function useConfig() {
   const [config, updateConfig] = useState<IConfig>(defaultConfig);
   const { updateThemeMode } = useThemeMode();
   const { setFontSize } = useFontSize(config[CONFIG_KEYS.FONT_SIZE]);
-  const { setPrimaryColor } = usePrimaryColor(config[CONFIG_KEYS.PRIMARY_COLOR]);
+  const { setPrimaryColor } = usePrimaryColor(
+    config[CONFIG_KEYS.PRIMARY_COLOR],
+  );
   console.dir(config);
 
   function setConfig(key: keyof IConfig, value: IConfig[keyof IConfig]) {
     console.dir({ key, value });
+    if (String(value).trim().length === 0) return;
     updateConfig({ ...config, [key]: value });
 
     (async () => {
