@@ -6,7 +6,7 @@
   "main": ".vite/build/index.js",
   "private": true,
   "scripts": {
-    "start": "dotenv -e .env -- electron-forge start",
+    "start": "nodemon --exec electron-forge start --watch ./main --ext .ts,.tsx --ignore \"node_modules\"",
     "package": "electron-forge package",
     "make": "electron-forge make",
     "publish": "electron-forge publish",
@@ -41,6 +41,7 @@
     "electron-devtools-installer": "^4.0.0",
     "eslint": "^9.39.4",
     "eslint-plugin-import": "^2.32.0",
+    "nodemon": "^3.1.14",
     "typescript": "~5.9.3",
     "typescript-eslint": "^8.57.2",
     "vite": "^7.3.1"
