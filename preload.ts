@@ -66,7 +66,7 @@ const api: WindowApi = {
 
   createDialog: (params: CreateDialogProps) => {
     return new Promise((resolve) => {
-      (async ()=> {
+      (async () => {
         const feedback = (await ipcRenderer.invoke(
           `${IPC_EVENTS.OPEN_WINDOW}:${WINDOW_NAMES.DIALOG}`,
           {
@@ -83,7 +83,7 @@ const api: WindowApi = {
           params.onCancel?.();
         }
         resolve(feedback);
-      })()
+      })();
     });
   },
   _dialogFeedback: (val: DialogFeedback, winId: number) =>
@@ -126,6 +126,13 @@ const api: WindowApi = {
       ipcRenderer.send(IPC_EVENTS.LOG_WARN, message, ...meta),
     error: (message: string, ...meta: unknown[]) =>
       ipcRenderer.send(IPC_EVENTS.LOG_ERROR, message, ...meta),
+  },
+
+  // clock
+  setWindowPosition: (x: number, y: number) =>
+    ipcRenderer.send(IPC_EVENTS.SET_WINDOW_POSITION, x, y),
+  setIgnoreMouseEvent: (ignore: boolean) => {
+    ipcRenderer.send(IPC_EVENTS.IGNORE_MOUSE_EVENT, ignore);
   },
 };
 contextBridge.exposeInMainWorld("api", api);

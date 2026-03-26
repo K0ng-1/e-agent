@@ -77,6 +77,10 @@ interface WindowApi {
     warn(message: string, ...meta: unknown[]): void;
     error(message: string, ...meta: unknown[]): void;
   };
+
+  // clock
+  setWindowPosition(x: number, y: number): void;
+  setIgnoreMouseEvent(ignore: boolean): void;
 }
 
 declare interface Window {

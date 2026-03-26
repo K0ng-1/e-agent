@@ -25,6 +25,11 @@ export enum IPC_EVENTS {
   THEME_MODE_UPDATED = "theme-mode-updated",
   CONFIG_UPDATED = "config-updated",
   SHORTCUT_CALLED = "shortcut-called",
+
+
+  // clock
+  SET_WINDOW_POSITION = "set-window-position",
+  IGNORE_MOUSE_EVENT = "ignore-mouse-event",
 }
 
 export enum SHORTCUT_KEYS {
@@ -36,6 +41,7 @@ export enum WINDOW_NAMES {
   MAIN = "main",
   SETTING = "setting",
   DIALOG = "dialog",
+  CLOCK = "clock",
 }
 
 export enum CONFIG_KEYS {

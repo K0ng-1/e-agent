@@ -64,7 +64,7 @@ class TrayService {
         {
           label: t("settings.title"),
           click: () => {
-            ipcMain.emit(`${IPC_EVENTS.OPEN_WINDOW}:$${WINDOW_NAMES.SETTING}`);
+            ipcMain.emit(`${IPC_EVENTS.OPEN_WINDOW}:${WINDOW_NAMES.SETTING}`);
           },
         },
         { role: "quit", label: t("tray.exit") },
@@ -93,7 +93,6 @@ class TrayService {
 
     app.on("quit", () => {
       this.destroy();
-      shortcutManager.unregister("tray.showWindow");
     });
   }
 

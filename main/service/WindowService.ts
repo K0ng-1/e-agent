@@ -55,6 +55,7 @@ class WindowService {
     main: { instance: void 0, isHidden: false, onCreate: [], onClosed: [] },
     setting: { instance: void 0, isHidden: false, onCreate: [], onClosed: [] },
     dialog: { instance: void 0, isHidden: false, onCreate: [], onClosed: [] },
+    clock: { instance: void 0, isHidden: false, onCreate: [], onClosed: [] },
   };
   private constructor() {
     this._setupIpcEvents();

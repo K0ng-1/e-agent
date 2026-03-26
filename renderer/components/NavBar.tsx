@@ -3,6 +3,7 @@ import clsx from "clsx";
 import DragRegion from "./DragRegion";
 import {
   ChatBubbleBottomCenterTextIcon,
+  ClockIcon,
   Cog8ToothIcon,
 } from "@heroicons/react/24/outline";
 import ThemeSwitcher from "./ThemeSwitcher";
@@ -23,6 +24,14 @@ export default function NavBar() {
         >
           <Tooltip content={t("main.sidebar.conversations")} placement="right">
             <ChatBubbleBottomCenterTextIcon className="w-5 h-5" />
+          </Tooltip>
+        </li>
+        <li
+          className="sidebar-item no-drag cursor-pointer hover:text-primary-hover text-tx-primary mt-5"
+          onClick={() => openWindow(WINDOW_NAMES.CLOCK)}
+        >
+          <Tooltip content={t("main.sidebar.clock")} placement="right">
+            <ClockIcon className="w-5 h-5" />
           </Tooltip>
         </li>
         <li className="flex-1"></li>

@@ -32,6 +32,7 @@
     },
     "sidebar": {
       "conversations": "对话",
+      "clock": "时钟",
       "settings": "设置",
       "help": "帮助"
     },
